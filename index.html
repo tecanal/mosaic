@@ -1,0 +1,648 @@
+<html>
+
+    <head>
+        <title>TeCanal Mosaic</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="lib/codemirror.css">
+        <link rel="stylesheet" href="addon/hint/show-hint.css">
+        <style type="text/css">
+            table { border-collapse: collapse; }
+
+            .card.inline {
+                display: inline;
+                padding: 3px;
+            }
+
+            .nav-tabs li {
+                display: block;
+                padding: .5rem 1rem;
+                border: 1px solid transparent;
+                border-top-left-radius: .25rem;
+                border-top-right-radius: .25rem;
+            }
+
+            .nav-tabs li.active {
+                color: #495057;
+                background-color: #fff;
+                border-color: #dee2e6 #dee2e6 #fff;
+            }
+
+            .nav-tabs li a {
+                text-decoration: none;
+            }
+
+            .docs li { margin-bottom: 8px; }
+
+            code {white-space: pre; color: black; }
+
+            table, th, td { border: 1px solid black; }
+
+            td { padding: 20px; }
+
+            #nav { border: none; margin-bottom: 0; height: 5vh; border-radius: 0px; }
+
+            .panel-container { height: 91vh; }
+
+            #editor { padding-bottom: 10px; }
+            
+            #console { width: 100%; height: 30%; }
+
+            /* Extra CodeMirror CSS */
+            .CodeMirror { border-top: 1px solid #888; border-bottom: 1px solid #888; height: 99%; }
+
+            /* Split Panel CSS */
+            .panel-left, .panel-right { padding: 10px; min-height: 200px }
+            .page-container { margin: 20px; }
+            .panel-container { display: flex; flex-direction: row; border: 1px solid silver; overflow: hidden; }
+
+            .panel-left {
+                flex: 0 0 auto;
+                width: 300px;
+                min-width: 150px;
+                white-space: nowrap;
+                background: #838383;
+                color: #fff
+            }
+
+            .splitter {
+                flex: 0 0 auto;
+                width: 18px;
+                background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/vsizegrip.png) center center no-repeat #535353;
+                min-height: 200px;
+                cursor: col-resize
+            }
+
+            .panel-right {
+                flex: 1 1 auto;
+                width: 100%;
+                min-width: 200px;
+                background: #eee
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="colorTest" style="display: none;"></div>
+
+        <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+            <a class="navbar-brand" href="#">TeCanal Mosaic</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#codeSamples" data-toggle="modal" data-target=".bd-example-modal-lg">Code Samples</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#help" data-toggle="modal" data-target=".bd-example-modal-lg">Help</a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item mr-2">
+                        <button id="runCode" class="btn btn-success" onclick="runCode()">Run Code</button>
+                    </li>
+                    <li class="nav-item">
+                        <button id="stopRunning" class="btn btn-danger" onclick="stopRunning()" disabled>Stop Running</button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div id="mobile" class="container-fluid mt-3" style="display: none">
+            <h1>Hmmm..</h1>
+            <p>It looks like you're on mobile. As of right now we don't support mobile. Please open this website on your computer.</p>
+        </div>
+
+        <div class="modal fade" id="codeSamples">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Code Samples</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+            
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div role="tabpanel">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="sample active">
+                                    <a href="#blinker" role="tab" data-toggle="tab">Blinker</a>
+                                </li>
+                                <li role="presentation" class="sample">
+                                    <a href="#onClick" role="tab" data-toggle="tab">On Click Pixel Alternate</a>
+                                </li>
+                                <li role="presentation" class="sample">
+                                    <a href="#scrollText" role="tab" data-toggle="tab">Scroll Text</a>
+                                </li>
+                                <li role="presentation" class="sample">
+                                    <a href="#heartShape" role="tab" data-toggle="tab">Heart Shape</a>
+                                </li>
+                                <li role="presentation" class="sample">
+                                    <a href="#animatedCloud" role="tab" data-toggle="tab">Animated Rain Cloud</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="blinker">
+                                        <h5 class="mt-2">
+                                            Blinker 
+                                            <small>(<a onclick="copyToEditor()" href="#">Copy to Editor</a>)</small>
+                                        </h5>
+                                        <code class="card card-body">var moz = new Mosaic(5, 5);
+var flag = 1;
+
+// Every half second have the origin pixel change color
+Mosaic.loop(function() {
+    if (flag == 1) {
+        moz.setTileColor(0, 0, "white");
+        flag = 0;
+    }
+    else {
+        moz.setTileColor(0, 0, "black");
+        flag = 1;
+    }
+}, 500);</code>
+                                </div>
+
+                                <div role="tabpanel" class="tab-pane" id="onClick">
+                                    <h5 class="mt-2">
+                                        On Click Pixel Alternate
+                                        <small>(<a onclick="copyToEditor()" href="#">Copy to Editor</a>)</small>
+                                    </h5>
+                                    <code class="card card-body">var moz = new Mosaic(5, 5); 
+moz.setTileColor(0, 0, 'black'); 
+moz.setTileOnClick(0, 0, function() { 
+    if (moz.getTileColor(0, 0) == "red") 
+        moz.setTileColor(0, 0, "black") 
+    else 
+    moz.setTileColor(0, 0, "red"); 
+});</code>
+                                </div>
+
+                                <div role="tabpanel" class="tab-pane" id="scrollText">
+                                    <h5 class="mt-2">
+                                        Scroll Text
+                                        <small>(<a onclick="copyToEditor()" href="#">Copy to Editor</a>)</small>
+                                    </h5>
+                                    <code class="card card-body">var moz = new Mosaic(5, 10); 
+var positions = [2, 3, 4, 6]; 
+
+// Set the animation rate to 2 frames per second 
+Mosaic.loop(function() { 
+    for (var i = 0; i < positions.length; i++) { 
+        // If the pixel is at the beginning, go to end of screen 
+        if (positions[i] === 0) 
+            positions[i] = 9; 
+        // Move the pixel by one 
+        else 
+            positions[i] = positions[i] - 1; 
+    }
+    // Clear Mosaic 
+    moz.clear(); 
+
+    // Update left part of H 
+    moz.setTileColor(positions[0], 1, 'black'); 
+    moz.setTileColor(positions[0], 2, 'black'); 
+    moz.setTileColor(positions[0], 3, 'black'); 
+    
+    // Update middle part of H 
+    moz.setTileColor(positions[1], 2, 'black'); 
+    
+    // Update right part of H 
+    moz.setTileColor(positions[2], 1, 'black'); 
+    moz.setTileColor(positions[2], 2, 'black'); 
+    moz.setTileColor(positions[2], 3, 'black'); 
+    // Update I 
+    moz.setTileColor(positions[3], 1, 'black'); 
+    moz.setTileColor(positions[3], 2, 'black'); 
+    moz.setTileColor(positions[3], 3, 'black'); 
+}, 500);</code>
+                                </div>
+
+                                <div role="tabpanel" class="tab-pane" id="heartShape">
+                                    <h5 class="mt-2">
+                                        Heart Shape 
+                                        <small>(<a onclick="copyToEditor()" href="#">Copy to Editor</a>)</small>
+                                    </h5>
+                                    <code class="card card-body">var moz = new Mosaic(8, 11); 
+
+var BORDER = "black"; 
+var MIDDLE = "red" 
+
+// top 
+moz.setTileColor(2, 7, BORDER); 
+moz.setTileColor(3, 7, BORDER); 
+moz.setTileColor(4, 6, BORDER); 
+moz.setTileColor(5, 5, BORDER); 
+moz.setTileColor(6, 6, BORDER); 
+moz.setTileColor(7, 7, BORDER); 
+moz.setTileColor(8, 7, BORDER); 
+
+// sides 
+moz.setTileColor(1, 4, BORDER); 
+moz.setTileColor(1, 5, BORDER); 
+moz.setTileColor(1, 6, BORDER); 
+moz.setTileColor(2, 3, BORDER); 
+moz.setTileColor(3, 2, BORDER); 
+moz.setTileColor(4, 1, BORDER); 
+moz.setTileColor(5, 0, BORDER); 
+moz.setTileColor(6, 1, BORDER); 
+moz.setTileColor(7, 2, BORDER); 
+moz.setTileColor(8, 3, BORDER); 
+moz.setTileColor(9, 4, BORDER); 
+moz.setTileColor(9, 5, BORDER); 
+moz.setTileColor(9, 6, BORDER); 
+
+// Middle 
+moz.setTileColor(2, 4, MIDDLE); 
+moz.setTileColor(2, 5, MIDDLE); 
+moz.setTileColor(2, 6, MIDDLE); 
+moz.setTileColor(3, 3, MIDDLE); 
+moz.setTileColor(3, 4, MIDDLE); 
+moz.setTileColor(3, 5, MIDDLE); 
+moz.setTileColor(3, 6, MIDDLE); 
+moz.setTileColor(4, 2, MIDDLE); 
+moz.setTileColor(4, 3, MIDDLE); 
+moz.setTileColor(4, 4, MIDDLE); 
+moz.setTileColor(4, 5, MIDDLE); 
+moz.setTileColor(5, 1, MIDDLE); 
+moz.setTileColor(5, 2, MIDDLE); 
+moz.setTileColor(5, 3, MIDDLE); 
+moz.setTileColor(5, 4, MIDDLE); 
+// moz.setTileColor(6, 2, MIDDLE); 
+// moz.setTileColor(6, 3, MIDDLE); 
+// moz.setTileColor(6, 4, MIDDLE); 
+// moz.setTileColor(6, 5, MIDDLE); 
+// moz.setTileColor(7, 3, MIDDLE); 
+// moz.setTileColor(7, 4, MIDDLE); 
+// moz.setTileColor(7, 5, MIDDLE); 
+// moz.setTileColor(7, 6, MIDDLE); 
+// moz.setTileColor(8, 4, MIDDLE); 
+// moz.setTileColor(8, 5, MIDDLE); 
+// moz.setTileColor(8, 6, MIDDLE);</code>
+                                </div>
+
+                                <div role="tabpanel" class="tab-pane" id="animatedCloud">
+                                    <h5 class="mt-2">
+                                        Animated Rain Cloud 
+                                        <small>(<a onclick="copyToEditor()" href="#">Copy to Editor</a>)</small>
+                                    </h5>
+                                    <code class="card card-body">var moz = new Mosaic(13, 14);
+
+var BORDER = "black"; 
+var RAIN = "blue"; 
+
+// Show the cloud 
+function paintCloud() { 
+    moz.setTileColor(0, 5, BORDER); 
+    moz.setTileColor(0, 6, BORDER); 
+    moz.setTileColor(0, 7, BORDER); 
+    moz.setTileColor(1, 4, BORDER); 
+    moz.setTileColor(1, 8, BORDER); 
+    moz.setTileColor(2, 4, BORDER); 
+    moz.setTileColor(2, 9, BORDER); 
+    moz.setTileColor(3, 4, BORDER); 
+    moz.setTileColor(3, 10, BORDER); 
+    moz.setTileColor(4, 4, BORDER); 
+    moz.setTileColor(4, 8, BORDER); 
+    moz.setTileColor(4, 10, BORDER); 
+    moz.setTileColor(5, 4, BORDER); 
+    moz.setTileColor(5, 9, BORDER); 
+    moz.setTileColor(6, 4, BORDER); 
+    moz.setTileColor(6, 10, BORDER); 
+    moz.setTileColor(7, 4, BORDER); 
+    moz.setTileColor(7, 11, BORDER); 
+    moz.setTileColor(8, 4, BORDER); 
+    moz.setTileColor(8, 11, BORDER); 
+    moz.setTileColor(9, 4, BORDER); 
+    moz.setTileColor(9, 11, BORDER); 
+    moz.setTileColor(10, 4, BORDER); 
+    moz.setTileColor(10, 11, BORDER); 
+    moz.setTileColor(11, 4, BORDER); 
+    moz.setTileColor(11, 10, BORDER); 
+    moz.setTileColor(12, 4, BORDER); 
+    moz.setTileColor(12, 9, BORDER); 
+    moz.setTileColor(13, 5, BORDER); 
+    moz.setTileColor(13, 6, BORDER); 
+    moz.setTileColor(13, 7, BORDER); 
+    moz.setTileColor(13, 8, BORDER); 
+} 
+
+var RAIN_X = [1, 3, 5, 7, 9, 11]; 
+var RAIN_Y = [3, 1, 3, 1, 3, 2]; 
+
+// Rain animation 
+Mosaic.loop(function() { 
+    // Clear the Mosaic frame 
+    moz.clear(); 
+    
+    // Repaint cloud 
+    paintCloud(); 
+    
+    // Go through all rain droplets and update position 
+    for (var i = 0; i < RAIN_X.length; i++) { 
+        // If rain is at the bottom, move to top 
+        if (RAIN_Y[i] == 0) { 
+            moz.setTileColor(RAIN_X[i], RAIN_Y[i], RAIN); RAIN_Y[i] = 3; 
+        } 
+        // Move rain down one 
+        else 
+        moz.setTileColor(RAIN_X[i], RAIN_Y[i]--, RAIN); 
+    } 
+}, 500);</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="help">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Help</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div role="tabpanel">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="help active">
+                                    <a href="#Mosaic" role="tab" data-toggle="tab">Mosaic</a>
+                                </li>
+                                <li role="presentation" class="help">
+                                    <a href="#color" role="tab" data-toggle="tab">Color</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="Mosaic">
+                                <h5 class="mt-2">Mosaic Class Methods</h5>
+                                <ul class="docs">
+                                    <li>
+                                        <b>Mosaic(height, width)</b>: Creates a new Mosaic object.
+                                        <ul>
+                                            <li>
+                                                Example: <code class="card inline">var moz = new Mosaic(5, 5);</code>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <b>setTileColor(x, y, color)</b>: Sets a tiles's color value.
+                                        <ul>
+                                            <li class="mb-2">
+                                                You can use it with HTML color name: <code class="card inline">moz.setTileColor(0, 0, "#gold");</code>
+                                            </li>
+                                            <li>
+                                                Or a color hex code: <code class="card inline">moz.setTileColor(0, 0, "#9b4495");</code>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <b>setTileGradient(x, y, colorOne, colorTwo)</b>: Sets a tiles's color value as gradient.
+                                        <ul>
+                                            <li>
+                                                Example: <code class="card inline">moz.setTileGradient(3, 4, "blue", "yellow");</code>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <b>setTileBorderColor(x, y)</b>: Sets a tiles's border color value.
+                                        <ul>
+                                            <li>
+                                                Example: <code class="card inline">moz.setTileBorderColor(3, 4, "blue");</code>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <b>setTileBorderWidth(x, y, width)</b>: Sets a tiles's border width value.
+                                        <ul>
+                                            <li>
+                                                Example: <code class="card inline">moz.setTileBorderWidth(3, 4, "3px");</code>
+                                            </li>
+                                            <li>
+                                                Example: <code class="card inline">moz.setTileBorderWidth(3, 4, "thick");</code>
+                                            </li>
+                                            <li>
+                                                Example: <code class="card inline">moz.setTileBorderWidth(3, 4, "medium");</code>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <b>setTileBorderStyle(x, y, style)</b>: Sets a tiles's border style value.
+                                        <ul>
+                                            <li>
+                                                Example: <code class="card inline">moz.setTileBorderColor(3, 4, "dotted");</code>
+                                            </li>
+                                            <li>
+                                                Example: <code class="card inline">moz.setTileBorderColor(3, 4, "dashed");</code>
+                                            </li>
+                                            <li>
+                                                Example: <code class="card inline">moz.setTileBorderColor(3, 4, "double");</code>
+                                            </li>
+                                            <li>
+                                                Example: <code class="card inline">moz.setTileBorderColor(3, 4, "solid");</code>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <b>setTileBorder(x, y, color, width, style)</b>: Sets a tiles's border.
+                                        <ul>
+                                            <li>
+                                                Example: <code class="card inline">moz.setTileBorderColor(3, 4, "blue");</code>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <b>setTileText(x, y, text)</b>: Sets a tiles's inner text.
+                                        <ul>
+                                            <li>
+                                                Example: <code class="card inline">moz.setTileText(0, 0, "o");</code>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <b>setTileOnClick(x, y, func): Set a click event function for a tile.</b>
+                                        <ul>
+                                            Example: <code class="card inline">moz.setTileOnClick(3, 4, function() { console.log("Hello, World!"); });</code>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <b>setTileOnMouseOver(x, y, func): Set a mouse over event function for a tile.</b>
+                                        <ul>
+                                            Example: <code class="card inline">moz.setTileOnMouseOver(3, 4, function() { console.log("I love Mosaic!"); });</code>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <b>getTileColor(x, y)</b>: Gets a tile's color value.
+                                        <ul>
+                                            <li>
+                                                Example: <code class="card inline">var color = moz.getTileColor(3, 4);</code>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <b>clear()</b>: Clears all pixel color values in a Mosaic.
+                                        <ul>
+                                            <li>
+                                                Example: <code class="card inline">moz.clear();</code>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <b>Mosaic.height</b>: Gets Mosaic height.
+                                        <ul>
+                                            <li>
+                                                Example: <code class="card inline">var height = moz.height;</code>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <b>Mosaic.width</b>: Gets Mosaic width.
+                                        <ul>
+                                            <li>
+                                                Example: <code class="card inline">var width = moz.width;</code>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div role="tabpanel" class="tab-pane" id="color">
+                                <h5 class="mt-2">Color Class Methods</h5>
+                                <ul class="docs">
+                                    <li>
+                                        <b>Color.random()</b>: Get a random color value.
+                                        <ul>
+                                            <li>
+                                                Example: <code class="card inline">moz.setTileColor(0, 0, Color.random());</code>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <b>Color.invert()</b>: Inverts a given color value.
+                                        <ul>
+                                            <li>
+                                                Example: <code class="card inline">Color.invert("black");</code>
+                                            </li>
+                                            <li>
+                                                Example: <code class="card inline">Color.invert("#3954AE");</code>
+                                            </li>
+                                            <li>
+                                                Example: <code class="card inline">Color.invert("rgb(3, 24, 244)");</code>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-container">
+            <!-- CodeMirrorEditor -->
+            <div class="panel-left" style="width: 50%">
+                <div id="editor"></div>
+            </div>
+
+            <div class="splitter"></div>
+
+            <!-- HTML Preview -->
+            <div class="panel-right" style="height: 100%; overflow: scroll">
+                <div id="preview">
+                    <table class="mb-2" id="mosaic"></table>
+                
+                    <b>Console (<a href="javascript:clearConsole();">Clear</a>):</b>
+                    <textarea id="console" readonly></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- CodeMirror JavaScript -->
+        <script src="lib/codemirror.js"></script>
+        <script src="lib/formatting.js"></script>
+        <script src="addon/edit/closetag.js"></script>
+        <script src="addon/edit/closebrackets.js"></script>
+        <script src="mode/javascript/javascript.js"></script>
+
+        <!-- Splitter Panel JavaScript -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="js/jquery-resizable.min.js"></script>
+
+        <!-- Bootstrap JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+        <script src="js/api.js"></script>
+        <script src="js/editor.js"></script>
+        <script>
+            /**
+             * Copy contents of code sample to editor.
+             */
+            function copyToEditor() {
+                // Set value of editor to example
+                var editor = document.querySelector('.CodeMirror').CodeMirror;
+                editor.setValue($(".tab-pane.active > code").text());
+
+                // Close modal
+                $(".modal").modal("hide");
+            }            
+
+            window.onload = function() {
+                    /**
+                     * Listen for Escape keypress.
+                     */
+                    document.onkeyup = function(e) {
+                        if (e.key == "Escape") {
+                            $(".modal").modal("hide");
+                        }
+                    };
+
+                    // Show modals on nav item click
+                    $('.nav-link').click(function(e) {
+                        e.preventDefault();
+         
+                        $('#' + e.target.href.split("#")[1]).modal();
+                    });
+
+                    // Handle sample tabs
+                    $(".nav-tabs li.sample a").click(function(e) {
+                        $(".nav-tabs li.sample").removeClass("active");
+                        $(this).parent().addClass("active");
+                    });
+
+                    // Handle help tabs
+                    $(".nav-tabs li.help a").click(function(e) {
+                        $(".nav-tabs li.help").removeClass("active");
+                        $(this).parent().addClass("active");
+                    });
+            };
+        </script>
+    </body>
+</html>

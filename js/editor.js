@@ -127,9 +127,28 @@ function executeCode() {
     }
 }
 
+/**
+ * Mark the lesson as complete on the UI and go to next lesson. 
+ * Save the progress if possible.
+ */
 function markLessonAsRead(lessonNum) {
-    if (hasLocalStorage)
-        localStorage.setItem("currentLesson", lessonNum + 1);
+    // Check if we can store in local storage
+    if (hasLocalStorage) {
+        // Only update the lesson num if its forward progress
+        if (lessonNum + 1 > localStorage.getItem("currentLesson"))
+            localStorage.setItem("currentLesson", lessonNum + 1);
+    }
+
+    // Mark the lesson as complete
+    $("#learningPath li").slice(0, lessonNum + 1).addClass("complete");
+
+    // Change lesson dot indicator to next lesson
+    $("#learningPath li").removeClass("active");
+    $("#learningPath li").eq(lessonNum + 1).addClass("active");
+
+    // Show lesson material
+    $(".lesson").hide();
+    $($("#learningPath li.active > a")[0].hash).show();
 }
 
 window.onload  = function() {
@@ -232,9 +251,11 @@ window.onload  = function() {
     $("#learningPath li").click(function(e) {
         e.preventDefault();
 
+        // Change lesson dot indicator
         $("#learningPath li").removeClass("active");
         $(this).addClass("active");
 
+        // Show lesson material
         $(".lesson").hide();
         $($("#learningPath li.active > a")[0].hash).show();
     });

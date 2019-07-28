@@ -207,9 +207,123 @@ moz.setTileColor(0, 2, "#000000");</code>
                             <button class="btn btn-success mt-3" onclick="markLessonAsRead(1);">Mark Lesson as Read</button>
                         </div>
 
+                        <div id="conditionals" class="lesson mb-3">
+                            <h3>Conditionals</h3>
+                            <p>
+                                Conditionals are statement that check conditions, which can be either true or false, and then do something depending on that state. Sometimes they are referred to as If-Then, Else-Then statements. If you want to check multiple conditions after each other, you can use else if. If, else if, and else statements are evaluated in sequential order, so you must be careful. If you have an else or an else if, you must have an if before it, but if you have an if, you do not need anything additional.
+                            </p>
+
+                            <code class="card card-body">var moz = new Mosaic(5, 5);
+
+// Get a random number between 1 and 3
+var random = 1 + Math.floor(Math.random() * 3);
+
+// If random equals 1, do this 
+if (random == 1) { 
+    moz.setTileColor(0, 0, "purple"); 
+} 
+// If it isn't 1, check if its 2 
+else if (random == 2) { 
+    moz.setTileColor(0, 0, "yellow"); 
+} 
+// If its none of the above, do this 
+else { 
+    moz.setTileColor(0, 0, "red"); 
+}</code>
+
+                            <button class="btn btn-success mt-3" onclick="markLessonAsRead(2);">Mark Lesson as Read</button>
+                        </div>
+
+                        <div id="loops" class="lesson mb-3">
+                            <h3>Using Loops</h3>
+
+                            <p class="mb-1">
+                                The loop header has the 1. variable initialization, 2. the condition, and 3. the variable mutation.
+                            </p>
+                            <ol>
+                                <li>
+                                    Variable initialization only happens at the first iteration (a.k.a run through) of the loop. It sets up our counter.
+                                </li>
+                                <li>
+                                    The condition is checked before every iteration to check if the loop should run or not.
+                                </li>
+                                <li>
+                                    The variable is then mutated, you can do any math operation you want to on the variable.
+                                </li>
+                            </ol>
+
+                            <code class="card card-body">var moz = new Mosaic(5, 5);
+
+// This loops goes from 0 - 4 
+for (var x = 0; x < moz.width; x++) {
+    moz.setTileColor(x, 0, "blue");
+}
+                            </code>
+
+                            <p class="mt-3">
+                                You can also put loops inside of other loops, this is called nesting. The inner loops finish first, then goes outwards.
+                            </p>
+
+                            <code class="card card-body">var moz = new Mosaic(5, 5);
+
+// This loops goes from 0 - 4 
+for (var x = 0; x < moz.width; x++) { 
+    // This loop goes from 0 - 4 
+    for (var y = 0; y < moz.height; y++) { 
+        moz.setTileColor(x, y, "yellow"); 
+    } 
+}</code>
+
+                            <button class="btn btn-success mt-3" onclick="markLessonAsRead(3);">Mark Lesson as Read</button>
+                        </div>
+
+                        <div id="creatingFunctions" class="lesson mb-3">
+                            <p>
+                                As previously written, functions are lines of code that have been grouped together and can be called upon by a name. These functions can take inputs called parameters, and can return outputs.
+                            </p>
+
+                            <p>
+                                You can have two functions with the same name, as long as they have different parameters, or orders of parameters. This is called function overloading.
+                            </p>
+
+                            <code class="card card-body">var moz = new Mosaic(5, 5);
+
+function drawLine() {
+    for (var x = 0; x < moz.width; x++) {
+        moz.setTileColor(x, 0, "blue");
+    }
+}
+
+// We can return any value we want with functions, provided that it is a singular value
+function getSecretColor() {
+    var secretColor = "#89692f";
+
+    return secretColor;
+}
+
+// You have a function name then in the () you have parameters
+function drawLine(y) {
+    for (var x = 0; x < moz.width; x++) {
+        moz.setTileColor(x, y, "blue");
+    }
+}</code>
+
+                            <button class="btn btn-success mt-3" onclick="markLessonAsRead(4);">Mark Lesson as Read</button>
+                        </div>
+
+                        <div>
+                            <h3>Congratulations, you've finished all the lessons!</h3>
+                            <p>
+                                Feel free to go back to reference any of the lessons, but otherwise go out and apply your newly gained JavaScript knowledge!
+                            </p>
+                        </div>
+
                         <ul id="learningPath">
                             <li class="active"><a href="#variables">1</a></li>
                             <li><a href="#callingFunctions">2</a></li>
+                            <li><a href="#conditionals">3</a></li>
+                            <li><a href="#loops">4</a></li>
+                            <li><a href="#creatingFunctions">5</a></li>
                         </ul>
                     </div>
 

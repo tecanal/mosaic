@@ -79,6 +79,18 @@ function stopRunning() {
 }
 
 /**
+ * Copy contents of code sample to editor.
+ */
+function copyToEditor() {
+    // Set value of editor to example
+    var editor = document.querySelector('.CodeMirror').CodeMirror;
+    editor.setValue($(".tab-pane.active > code").text());
+
+    // Close modal
+    $(".modal").modal("hide");
+}            
+
+/**
  * Execute user's code.
  */
 function executeCode() {
@@ -113,6 +125,11 @@ function executeCode() {
         script.text = code;
         document.body.appendChild(script);
     }
+}
+
+function markLessonAsRead(lessonNum) {
+    if (hasLocalStorage)
+        localStorage.setItem("currentLesson", lessonNum + 1);
 }
 
 window.onload  = function() {
@@ -176,6 +193,67 @@ window.onload  = function() {
         var range = getSelectedRange();
         editor.commentRange(isComment, range.from, range.to);
     }
+
+    /**
+     * Listen for Escape keypress.
+     */
+   document.onkeyup = function(e) {
+        if (e.key == "Escape") 
+            $(".modal").modal("hide");
+    };
+
+    // Show modals on nav item click
+    $('.nav-link').click(function(e) {
+        e.preventDefault();
+         
+        $('#' + e.target.href.split("#")[1]).modal();
+    });
+
+    // Hide all lessons
+    $(".lesson").hide();
+
+    // Get cached Learn JavaScript position
+    var currentLesson = localStorage.getItem("currentLesson");
+    if (hasLocalStorage && currentLesson) {
+        // Remove default active
+        $("#learningPath li").removeClass("active");
+
+        // Add read to before current lesson
+        $("#learningPath li").slice(0, currentLesson).addClass("complete");
+
+        // Add active to the current lesson
+        $("#learningPath li").eq(currentLesson).addClass("active");
+    }
+
+    // Show the active lesson
+    $($("#learningPath li.active > a")[0].hash).show();
+    
+    // Handle Learning JavaScript view
+    $("#learningPath li").click(function(e) {
+        e.preventDefault();
+
+        $("#learningPath li").removeClass("active");
+        $(this).addClass("active");
+
+        $(".lesson").hide();
+        $($("#learningPath li.active > a")[0].hash).show();
+    });
+
+    // Handle Code Samples Tabpanel
+    $(".nav-tabs li.sample a").click(function(e) {
+        e.preventDefault();
+
+        $(".nav-tabs li.sample").removeClass("active");
+        $(this).parent().addClass("active");
+    });
+
+    // Handle Docs Tabpanel
+    $(".nav-tabs li.docs a").click(function(e) {
+        e.preventDefault();
+
+        $(".nav-tabs li.docs").removeClass("active");
+        $(this).parent().addClass("active");
+    });
 }();
 
 /**

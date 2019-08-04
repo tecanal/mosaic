@@ -31,6 +31,9 @@ function clearConsole() {
 * Handle the run code button click to run code for the first time.
 */
 function runCode() {
+    // Remove button glow
+    $("#runCode").removeClass("button-glow");
+
     // Disable button because auto-run is now enabled
     var el = document.getElementById("runCode");
     el.disabled = true;
@@ -68,6 +71,9 @@ function stopRunning() {
     // Re-enable the run code button to restart the animation
     document.getElementById("runCode").disabled = false;
     document.getElementById("runCode").innerHTML = "Run Code";
+
+    // Add button glow
+    $("#runCode").addClass("button-glow");
 
     document.getElementById("stopRunning").disabled = true;
 

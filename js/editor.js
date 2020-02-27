@@ -108,7 +108,7 @@ function executeCode() {
 
     // Get code from editor
     let editor = document.querySelector('.CodeMirror').CodeMirror;
-    let code = "(async function() { " + editor.getValue() + " })();";
+    let code = "(async function() { " + editor.getValue() + "\n })();";
 
     // Add code as a script to page + execute
     let script = document.createElement('script');

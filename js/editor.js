@@ -101,15 +101,15 @@ function copyToEditor() {
  */
 function executeCode() {
     // Clear all intervals if its an animation
-    for (var i = 1; i < 999999; i++)
+    for (let i = 1; i < 999999; i++)
         window.clearInterval(i);
 
     // Get code from editor
-    var editor = document.querySelector('.CodeMirror').CodeMirror;
-    var code = editor.getValue();
+    let editor = document.querySelector('.CodeMirror').CodeMirror;
+    let code = "(function() { " + editor.getValue() + " })();";
 
     // Add code as a script to page + execute
-    var script = document.createElement('script');
+    let script = document.createElement('script');
     try {
         // If its first time executing something
         if (firstRun) {
@@ -127,7 +127,8 @@ function executeCode() {
         }
                         
         firstRun = false;
-    } catch (e) {
+    } 
+    catch (e) {
         script.text = code;
         document.body.appendChild(script);
     }
@@ -171,9 +172,10 @@ window.onload  = function() {
         autoCloseBrackets: true,
         lineNumbers: true,
         indentWithTabs: true,
+        indentUnit: 4,
         lineWrapping: true,
         autofocus: true,
-        value: "var moz = new Mosaic(5, 5);\n\nmoz.setTileColor(0, 0, 'black');",
+        value: "const moz = new Mosaic(5, 5);\n\nmoz.setTileColor(0, 0, 'black');",
         extraKeys: {
             "Ctrl-/": function(instance) { 
                 commentSelection(true);
@@ -189,7 +191,8 @@ window.onload  = function() {
         localStorage.removeItem(test);
 
         hasLocalStorage = true;
-    } catch(e) {
+    } 
+    catch(e) {
         hasLocalStorage = false;
     }
 

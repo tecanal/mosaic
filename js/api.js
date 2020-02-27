@@ -6,7 +6,7 @@ var table = document.getElementById("mosaic");
 class Color {
     static getComponents(color) {
         // Set hidden pixel to be our color to test
-        var colorTest = document.getElementById("colorTest");
+        let colorTest = document.getElementById("colorTest");
         colorTest.style.backgroundColor = color;
 
         // Get the computed color
@@ -25,7 +25,7 @@ class Color {
     * Generates a random color.
     */
     static random() {
-        let letters = "0123456789ABCDEF";
+        const letters = "0123456789ABCDEF";
         let color = "#";
 
         for (var i = 0; i < 6; i++) 
@@ -122,27 +122,36 @@ class Mosaic {
      * Set the tile color at x, y.
      */
     setTileColor(x, y, color) {
-        // Get rid of any gradient it has
-        table.rows[this._height - 1 - y].children[x].style.backgroundImage = "";
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            // Get rid of any gradient it has
+            table.rows[this._height - 1 - y].children[x].style.backgroundImage = "";
 
-        // Set the tile color
-        table.rows[this._height - 1 - y].children[x].style.backgroundColor = color;
+            // Set the tile color
+            table.rows[this._height - 1 - y].children[x].style.backgroundColor = color;
+        }
     };
 
     /**
      * Set the tile color components at x, y.
      */
     setTileColorComponents(x, y, r, g, b) {
-        var colorValues = [r, g, b];
+        const colorValues = [r, g, b];
 
-        table.rows[this._height - 1 - y].children[x].style.backgroundColor = "rgb(" + colorValues.join(", ") + ")";
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            table.rows[this._height - 1 - y].children[x].style.backgroundColor = "rgb(" + colorValues.join(", ") + ")";
+        }
     }
 
     /**
      * Get the tile color at x, y.
      */
     getTileColor(x, y) {
-        return table.rows[this._height - 1 - y].children[x].style.backgroundColor;
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            return table.rows[this._height - 1 - y].children[x].style.backgroundColor;
+        }
     };
 
     /**
@@ -150,7 +159,7 @@ class Mosaic {
      */
     getTileColorComponents(x, y) {
         // Get color from tile
-        var color = this.getTileColor(x, y);
+        const color = this.getTileColor(x, y);
     
         // Get components of color and return
         return Color.getComponents(color);
@@ -160,71 +169,109 @@ class Mosaic {
      * Give the pixel a color gradient.
      */
     setTileGradient(x, y, colorOne, colorTwo) {
-        // Get rid of any color it has
-        table.rows[this._height - 1 - y].children[x].style.backgroundColor = "";
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            const tile = this.getTile(x, y);
 
-        // Set the pixel gradient
-        table.rows[this._height - 1 - y].children[x].style.backgroundImage = '-webkit-linear-gradient(' + colorOne + ' , ' + colorTwo + ')';
+            // Get rid of any color it has
+            tile.style.backgroundColor = "";
+
+            // Set the pixel gradient
+            tile.style.backgroundImage = '-webkit-linear-gradient(' + colorOne + ' , ' + colorTwo + ')';
+        }
     }
 
     /*
     * Give the pixel a color gradient.
     */
     getTileGradient(x, y) {
-        // Get gradient and remove -webkit-linear-gradient('') text
-        let gradient = table.rows[this._height - 1 - y].children[x].style.backgroundImage;
-        gradient = gradient.replace("-webkit-linear-gradient(top, ", "").replace(")", "");
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            const tile = this.getTile(x, y);
 
-        // Return the two colors
-        return gradient.split(", ");
+            // Get gradient and remove -webkit-linear-gradient('') text
+            const gradient = tile.style.backgroundImage;
+            gradient = gradient.replace("-webkit-linear-gradient(top, ", "").replace(")", "");
+
+            // Return the two colors
+            return gradient.split(", ");
+        }
     }
 
     /**
      * Set the tile border color at x, y.
      */
     setTileBorderColor(x, y, color) {
-        table.rows[this._height - 1 - y].children[x].style.borderColor = color;
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            const tile = this.getTile(x, y);
+
+            tile.style.borderColor = color;
+        }
     }
 
     /**
      * Get the tile border color at x, y.
      */
     getTileBorderColor(x, y) {
-        return table.rows[this._height - 1 - y].children[x].style.borderColor;
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            const tile = this.getTile(x, y);
+
+            return tile.style.borderColor;
+        }
     }
 
     /**
      * Set the tile border width at x, y.
      */
     setTileBorderWidth(x, y, width) {
-        var tile = table.rows[this._height - 1 - y].children[x];
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            const tile = this.getTile(x, y);
 
-        // If there is no border style, then default to solid otherwise border width means nothing
-        if (!tile.borderStyle)
-            tile.style.borderStyle = "solid";
+            // If there is no border style, then default to solid otherwise border width means nothing
+            if (!tile.borderStyle)
+                tile.style.borderStyle = "solid";
 
-        tile.style.borderWidth = width;
+            tile.style.borderWidth = width;
+        }
     };
 
     /**
      * Set the tile border color at x, y.
      */
     getTileBorderWidth(x, y) {
-        return table.rows[this._height - 1 - y].children[x].style.borderWidth;
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            const tile = this.getTile(x, y);
+
+            return tile.style.borderWidth;
+        }
     }
 
     /**
      * Set the tile border style at x, y.
      */
     setTileBorderStyle(x, y, style) {
-        table.rows[this._height - 1 - y].children[x].style.borderStyle = style;
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            const tile = this.getTile(x, y);
+
+            tile.style.borderStyle = style;
+        }
     }
 
     /**
      * Get the tile border style at x, y.
      */
     getBorderStyle(x, y) {
-        return table.rows[this._height - 1 - y].children[x].style.borderStyle;
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            const tile = this.getTile(x, y);
+
+            return tile.style.borderStyle;
+        }
     }
 
     /**
@@ -240,28 +287,48 @@ class Mosaic {
      * Set tile inner text.
      */
     setTileText(x, y, text) {
-        table.rows[this._height - 1 - y].children[x].innerText = text;
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            const tile = this.getTile(x, y);
+
+            tile.innerText = text;
+        }
     }
 
     /**
      * Get tile inner text.
      */
     getTileText(x, y) {
-        return table.rows[this._height - 1 - y].children[x].innerText;
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            const tile = this.getTile(x, y);
+
+            return tile.innerText;
+        }
     }
 
     /**
      * Set the tile click function.
      */
     setTileOnClick(x, y, func) {
-        table.rows[this._height - 1 - y].children[x].addEventListener("click", func);
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            const tile = this.getTile(x, y);
+
+            tile.addEventListener("click", func);
+        }
     };
 
     /**
      * Set the tile mouseover function.
      */
     setTileOnMouseOver(x, y, func) {
-        table.rows[this._height - 1 - y].children[x].addEventListener("mouseover", func);
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
+            const tile = this.getTile(x, y);
+
+            tile.addEventListener("mouseover", func);
+        }
     }
 
     /**

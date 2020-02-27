@@ -1,4 +1,8 @@
-var table = document.getElementById("mosaic");
+const table = document.getElementById("mosaic");
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 /**
  * The class that allows for color interaction.

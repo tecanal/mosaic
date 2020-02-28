@@ -78,10 +78,10 @@ class Mosaic {
         table.innerHTML = "";
 
         // Create table with height and width parameters
-        for (var i = 0; i < height; i++) {
-            var row = table.insertRow(i);
+        for (let i = 0; i < height; i++) {
+            let row = table.insertRow(i);
 
-            for (var j = 0; j < width; j++) 
+            for (let j = 0; j < width; j++) 
                 row.insertCell(j);
         }
     };
@@ -108,7 +108,7 @@ class Mosaic {
     }
 
     /**
-     * Get the width of the Picture object.
+     * Get the width of the Mosaic object.
      */
     get width() {
         return this._width;

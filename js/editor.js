@@ -3,11 +3,14 @@ let firstRun = true;
 let hasLocalStorage = false;
 let autoRun = true;
 
+// handle errors that come from editor.js
+window.onerror = handleErrors;
+
 /**
  * Clear the contents of the onscreen console.
  */
 function clearConsole() {
-    document.getElementById("console").value = "";
+    document.getElementById("console").innerHTML = "";
 }
 
 /**
@@ -89,8 +92,9 @@ function executeCode() {
 
     // Get code from editor
     let editor = document.querySelector('.CodeMirror').CodeMirror;
-    let code = "(async function() { " + editor.getValue() + "\n })();";
 
+    let code = "(async function() { " + editor.getValue() + "\n })().catch(e => console.error(e))";
+    
     // Add code as a script to page + execute
     let script = document.createElement('script');
     try {
@@ -115,6 +119,10 @@ function executeCode() {
         script.text = code;
         document.body.appendChild(script);
     }
+}
+
+function handleErrors(message, url, lineNum, colNum, error) {
+    console.error(message);
 }
 
 /**
@@ -275,19 +283,30 @@ window.onload  = function() {
 (function() {
     const oldLog = console.log;
     const oldError = console.error;
+    const consoleEl = document.getElementById("console");
 
     console.log = function(message) {
-        const consoleEl = document.getElementById("console");
-
         // Append value to the end if there is already log output
-        if (consoleEl.value)
-            consoleEl.value += "\n" + message;
+        if (consoleEl.innerHTML)
+            consoleEl.innerHTML += "<br>" + message;
         // Set the new value of log output
         else
-            consoleEl.value = message;
+            consoleEl.innerHTML = message;
+
+        consoleEl.scrollTop = consoleEl.scrollHeight;
 
         oldLog.apply(console, arguments);
     };
 
-    
+    console.error = function(message) {
+        const consoleEl = document.getElementById("console");
+
+        if (consoleEl.innerHTML)
+            consoleEl.innerHTML += "<span style='color: red'><br>" + message + "</span>";
+        // Set the new value of error output
+        else
+            consoleEl.innerHTML = "<span style='color: red'>" + message + "</span>";
+
+        oldError.apply(console, arguments);
+    }
 })();

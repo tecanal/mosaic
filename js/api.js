@@ -8,21 +8,53 @@ function sleep(ms) {
  * The class that allows for color interaction.
  */
 class Color {
+    /**
+     * Get the RGB components of an input.
+     * 
+     * @param {any} color 
+     * @returns {array} colorComponents
+     */
     static getComponents(color) {
         // Set hidden pixel to be our color to test
         let colorTest = document.getElementById("colorTest");
         colorTest.style.backgroundColor = color;
 
         // Get the computed color
-        var color = window.getComputedStyle(colorTest).getPropertyValue("background-color");
-        color = color.replace("rgb(", "").replace(")", "");
+        let computedColor = window.getComputedStyle(colorTest).getPropertyValue("background-color");
+        computedColor = computedColor.replace("rgb(", "").replace(")", "");
 
         // Split into array and convert to integers
-        let colorValues = color.split(", ").map(function(x) { 
-            return parseInt(x, 10);
-        }); 
+        let colorComponents = computedColor.split(", ").map((x) => parseInt(x, 10)); 
 
-        return colorValues;
+        return colorComponents;
+    }
+
+    /**
+     * Check if all the passed colors are the same.
+     * 
+     * @param  {...any} colors 
+     */
+    static isSame(...colors) {
+        // if there are more than two colors, compare them
+        if (colors.length >= 2) {
+            // normalize colors so they are all in "R, G, B" format
+            for (let i = 0; i < colors.length; i++) {
+                let color = colors[i];
+
+                // if in hex or color name format, turn into rgb format
+                if (color.includes("#") || color.includes("rgb"))
+                    color = Color.getComponents(color);
+
+                // convert the colorComponents array of each color into R, G, B format
+                color = color.join(", ");
+
+                // update colors array
+                colors[i] = color;
+            }
+
+            // check if all the colors are equal
+            return colors.every(color => color == colors[0]);
+        }
     }
 
     /**
@@ -154,7 +186,12 @@ class Mosaic {
     getTileColor(x, y) {
         // bounds checking
         if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            return table.rows[this._height - 1 - y].children[x].style.backgroundColor;
+            let color = this.getTile(x, y).style.backgroundColor;
+
+            if (color.includes("rgb"))
+                color = Color.getComponents(color);
+
+            return color;
         }
     };
 

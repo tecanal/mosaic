@@ -197,9 +197,6 @@ window.onload  = function() {
         if (localStorage.getItem("code"))
             editor.setValue(localStorage.getItem("code"));
     }
-    
-    // set cursor to end of editor
-    editor.setCursor(editor.lineCount(), 0);
 
     function getSelectedRange() {
         return { from: editor.getCursor(true), to: editor.getCursor(false) };

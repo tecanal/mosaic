@@ -159,13 +159,12 @@ window.onload  = function() {
     // Create CodeMirror editor
     var editor = CodeMirror(document.getElementById("editor"), {
         mode: "javascript",
-        autoCloseTags: true,
         autoCloseBrackets: true,
         lineNumbers: true,
         indentWithTabs: true,
         indentUnit: 4,
         lineWrapping: true,
-        autofocus: true,
+        styleActiveLine: { nonEmpty: true },
         value: "const moz = new Mosaic(5, 5);\n\nmoz.setTileColor(0, 0, 'black');",
         extraKeys: {
             "Ctrl-/": function(instance) { 
@@ -173,6 +172,8 @@ window.onload  = function() {
             },
         }      
     });
+
+    editor.focus();
 
     // Test for localStorage capabilities
     try {
@@ -196,9 +197,10 @@ window.onload  = function() {
         if (localStorage.getItem("code"))
             editor.setValue(localStorage.getItem("code"));
     }
+    
+    // set cursor to end of editor
+    editor.setCursor(editor.lineCount(), 0);
 
-    CodeMirror.commands["selectAll"](editor);
-      
     function getSelectedRange() {
         return { from: editor.getCursor(true), to: editor.getCursor(false) };
     }

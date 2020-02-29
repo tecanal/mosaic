@@ -9,13 +9,10 @@
         <meta property="og:url" content="https://tecanal.org/mosaic/"/>
         <meta property="og:type" content="website"/>
         <meta property="og:description" 
-            content="Learn JavaScript visually and without having to learn HTML and CSS
-                        at the same time." />
+            content="Learn JavaScript visually and without having to learn HTML and CSS at the same time."/>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="lib/codemirror.css">
-        <link rel="stylesheet" href="addon/hint/show-hint.css">
+        <link rel="stylesheet" href="codemirror/codemirror.css">
         <style type="text/css">
             table { border-collapse: collapse; }
 
@@ -50,6 +47,8 @@
             .panel-container { height: 90vh; padding: 0; margin: 0; }
 
             #editor { padding: 0; margin: 0;}
+
+            .CodeMirror-activeline-background { background: #f5f5f5; }
             
             #console { width: 100%; background: white; border: 1px solid gray; height: 30%; overflow-y: scroll; }
 
@@ -162,11 +161,6 @@
                 </ul>
             </div>
         </nav>
-
-        <div id="mobile" class="container-fluid mt-3" style="display: none">
-            <h1>Hmmm..</h1>
-            <p>It looks like you're on mobile. As of right now we don't support mobile. Please open this website on your computer.</p>
-        </div>
 
         <div class="modal fade" id="learn">
             <div class="modal-dialog modal-xl">
@@ -330,7 +324,7 @@ function drawLine(y) {
                             <button class="btn btn-success mt-3" onclick="markLessonAsRead(4);">Mark Lesson as Read</button>
                         </div>
 
-                        <div>
+                        <div id="allLessonsDone" style="display: none">
                             <h3>Congratulations, you've finished all the lessons!</h3>
                             <p>
                                 Feel free to go back to reference any of the lessons, but otherwise go out and apply your newly gained JavaScript knowledge!
@@ -863,11 +857,11 @@ Mosaic.loop(function() {
         </div>
 
         <!-- CodeMirror JavaScript -->
-        <script src="lib/codemirror.js"></script>
-        <script src="lib/formatting.js"></script>
-        <script src="addon/edit/closetag.js"></script>
-        <script src="addon/edit/closebrackets.js"></script>
-        <script src="mode/javascript/javascript.js"></script>
+        <script src="codemirror/codemirror.js"></script>
+        <script src="codemirror/formatting.js"></script>
+        <script src="codemirror/addon/edit/closebrackets.js"></script>
+        <script src="codemirror/addon/selection/active-line.js"></script>
+        <script src="codemirror/mode/javascript/javascript.js"></script>
 
         <!-- Splitter Panel JavaScript -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

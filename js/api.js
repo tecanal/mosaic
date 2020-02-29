@@ -42,12 +42,13 @@ class Color {
                 let color = colors[i];
 
                 // if in hex or color name format, turn into rgb format
-                if (color.includes("#") || color.includes("rgb"))
+                if (!color.includes(",") || color.includes("rgb")) {
                     color = Color.getComponents(color);
 
-                // convert the colorComponents array of each color into R, G, B format
-                color = color.join(", ");
-
+                    // convert the colorComponents array of each color into R, G, B format
+                    color = color.join(",");
+                }
+                    
                 // update colors array
                 colors[i] = color;
             }
@@ -62,9 +63,9 @@ class Color {
     */
     static random() {
         const letters = "0123456789ABCDEF";
-        let color = "#";
 
-        for (var i = 0; i < 6; i++) 
+        let color = "#";
+        for (let i = 0; i < 6; i++) 
             color += letters[Math.floor(Math.random() * 16)];
                 
         return color;
@@ -97,6 +98,171 @@ class Color {
     };
 }
 
+class Tile {
+    constructor(cellRef) {
+        // set the cell propery of the object to the reference to HTML TableCell
+        this.cell = cellRef;
+
+        // defaults
+        this._borderColor = "black";
+        this._borderStyle = "solid";
+        this._borderWidth = 1;
+        this._color = "#eeeeee";
+        this._gradient = "";
+        this._text = "";
+    }
+
+    get borderColor() {
+        return this._borderColor;
+    }
+    
+    set borderColor(color) {
+        this._borderColor = color;
+
+        this.cell.style.borderColor = color;
+    }
+
+    setBorderColor(color) {
+        // without the underscore means its calling the setter
+        this.borderColor = color;
+
+        return this;
+    }
+
+    get borderStyle() {
+        return this._borderStyle;
+    }
+
+    set borderStyle(borderStyle) {
+        this._borderStyle = borderStyle;
+
+        this.cell.style.borderStyle = borderStyle;
+    }
+
+    setBorderStyle(borderStyle) {
+        // without the underscore means its calling the setter
+        this.borderStyle = borderStyle;
+
+        return this;
+    }
+
+    get borderWidth() {
+        return this._borderWidth;
+    }
+
+    set borderWidth(width) {
+        // if the width is a number, add px
+        if (!isNaN(width))
+            this._borderWidth = width + "px";
+        // if is already in px form or is word aka not a number
+        else
+            this._borderWidth = width;
+
+        this.cell.style.borderWidth = this._borderWidth;
+    }
+
+    setBorderWidth(width) {
+        // without the underscore means its calling the setter
+        this.borderWidth = width;
+
+        return this;
+    }
+
+    get color() {
+        // return Color.getComponents(this._color);
+        return this._color;
+    }
+
+    set color(color) {
+        // set color of Tile object
+        this._color = color;
+
+        // get rid of any gradient it has
+        this.cell.style.backgroundImage = "";
+
+        // set background color
+        this.cell.style.backgroundColor = color;
+    }
+
+    setColor(color) {
+        // without the underscore means its calling the setter
+        this.color = color;
+
+        return this;
+    }
+
+    get gradient() {
+        return this._gradient;
+    }
+
+    set gradient(colors) {
+        // get rid of any color it has
+        this.color = "";
+        
+        this._gradient = colors;
+
+        // set the pixel gradient
+        this.cell.style.backgroundImage = '-webkit-linear-gradient(' + colors.join(", ") + ')';
+    }
+
+    setTileGradient(colors) {
+        this.gradient = colors;
+
+        return this;
+    }
+
+    get text() {
+        return this._text;
+    }
+
+    set text(text) {
+        this._text = text;
+
+        this.cell.innerText = text;
+    }
+
+    setText(text) {
+        this.text = text;
+
+        return this;
+    }
+
+    get onClick() {
+        return this._onClick;
+    }
+
+    set onClick(func) {
+        this._onClick = func;
+
+        // set the DOM onclick property to the function
+        this.cell.onclick = func;
+    }
+
+    setOnClick(func) {
+        // without the underscore means its calling the setter
+        this.onClick = func;
+
+        return this;
+    }
+
+    get onMouseOver() {
+        return this._onMouseOver;
+    }
+
+    set onMouseOver(func) {
+        this._onMouseOver = func;
+
+        // set DOM onmouseover property to the function
+        this.cell.onmouseover = func;
+    }
+
+    setOnMouseOver(func) {
+        this.onMouseOver = func;
+
+        return this;
+    }
+}
+
 /**
  * The Mosaic class.
  */
@@ -109,12 +275,18 @@ class Mosaic {
         // Clear any leftover table HTML
         table.innerHTML = "";
 
+        this._tiles = [];
+
         // Create table with height and width parameters
         for (let i = 0; i < height; i++) {
-            let row = table.insertRow(i);
+            let tableRow = table.insertRow(i);
+            let arrayRow = [];
 
-            for (let j = 0; j < width; j++) 
-                row.insertCell(j);
+            for (let j = 0; j < width; j++)  {
+                arrayRow.push(new Tile(tableRow.insertCell(j)));
+            } 
+
+            this._tiles.push(arrayRow);
         }
     };
                 
@@ -146,12 +318,18 @@ class Mosaic {
         return this._width;
     }
 
+    get tiles() {
+        return this._tiles;
+    }
+
     /**
      * Get the raw DOM element from the table in case the user wants to do something 
      * outside of the normal Mosaic API.
      */
     getTile(x, y) {
-        return table.rows[this._height - 1 - y].children[x];
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height)
+            return this._tiles[this._height - 1 - y][x];
     }
                 
     /**
@@ -159,25 +337,8 @@ class Mosaic {
      */
     setTileColor(x, y, color) {
         // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            // Get rid of any gradient it has
-            table.rows[this._height - 1 - y].children[x].style.backgroundImage = "";
-
-            // Set the tile color
-            table.rows[this._height - 1 - y].children[x].style.backgroundColor = color;
-        }
-    };
-
-    /**
-     * Set the tile color components at x, y.
-     */
-    setTileColorComponents(x, y, r, g, b) {
-        const colorValues = [r, g, b];
-
-        // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            table.rows[this._height - 1 - y].children[x].style.backgroundColor = "rgb(" + colorValues.join(", ") + ")";
-        }
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) 
+            this.getTile(x, y).color = color;
     }
 
     /**
@@ -185,41 +346,17 @@ class Mosaic {
      */
     getTileColor(x, y) {
         // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            let color = this.getTile(x, y).style.backgroundColor;
-
-            if (color.includes("rgb"))
-                color = Color.getComponents(color);
-
-            return color;
-        }
-    };
-
-    /**
-     * Get the tile color components at x, y.
-     */
-    getTileColorComponents(x, y) {
-        // Get color from tile
-        const color = this.getTileColor(x, y);
-    
-        // Get components of color and return
-        return Color.getComponents(color);
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height)
+            return this.getTile(x, y).color;
     }
 
     /*
      * Give the pixel a color gradient.
      */
-    setTileGradient(x, y, colorOne, colorTwo) {
+    setTileGradient(x, y, ...colors) {
         // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            const tile = this.getTile(x, y);
-
-            // Get rid of any color it has
-            tile.style.backgroundColor = "";
-
-            // Set the pixel gradient
-            tile.style.backgroundImage = '-webkit-linear-gradient(' + colorOne + ' , ' + colorTwo + ')';
-        }
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height)
+            this.getTile(x, y).gradient = colors;
     }
 
     /*
@@ -227,16 +364,8 @@ class Mosaic {
     */
     getTileGradient(x, y) {
         // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            const tile = this.getTile(x, y);
-
-            // Get gradient and remove -webkit-linear-gradient('') text
-            const gradient = tile.style.backgroundImage;
-            gradient = gradient.replace("-webkit-linear-gradient(top, ", "").replace(")", "");
-
-            // Return the two colors
-            return gradient.split(", ");
-        }
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height)
+            return this.getTile(x, y).gradient;
     }
 
     /**
@@ -244,11 +373,8 @@ class Mosaic {
      */
     setTileBorderColor(x, y, color) {
         // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            const tile = this.getTile(x, y);
-
-            tile.style.borderColor = color;
-        }
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height)
+            this.getTile(x, y).borderColor = color;
     }
 
     /**
@@ -256,11 +382,8 @@ class Mosaic {
      */
     getTileBorderColor(x, y) {
         // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            const tile = this.getTile(x, y);
-
-            return tile.style.borderColor;
-        }
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) 
+            return this.getTile(x, y).borderColor;
     }
 
     /**
@@ -268,27 +391,17 @@ class Mosaic {
      */
     setTileBorderWidth(x, y, width) {
         // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            const tile = this.getTile(x, y);
-
-            // If there is no border style, then default to solid otherwise border width means nothing
-            if (!tile.borderStyle)
-                tile.style.borderStyle = "solid";
-
-            tile.style.borderWidth = width;
-        }
-    };
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) 
+            this.getTile(x, y).borderWidth = width;
+    }
 
     /**
      * Set the tile border color at x, y.
      */
     getTileBorderWidth(x, y) {
         // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            const tile = this.getTile(x, y);
-
-            return tile.style.borderWidth;
-        }
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) 
+            return this.getTile(x, y).borderWidth;
     }
 
     /**
@@ -296,11 +409,8 @@ class Mosaic {
      */
     setTileBorderStyle(x, y, style) {
         // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            const tile = this.getTile(x, y);
-
-            tile.style.borderStyle = style;
-        }
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height)
+            this.getTile(x, y).borderStyle = style;
     }
 
     /**
@@ -308,11 +418,8 @@ class Mosaic {
      */
     getBorderStyle(x, y) {
         // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            const tile = this.getTile(x, y);
-
-            return tile.style.borderStyle;
-        }
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height)
+            return this.getTile(x, y).borderStyle;
     }
 
     /**
@@ -329,11 +436,8 @@ class Mosaic {
      */
     setTileText(x, y, text) {
         // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            const tile = this.getTile(x, y);
-
-            tile.innerText = text;
-        }
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) 
+            this.getTile(x, y).text = text;
     }
 
     /**
@@ -341,11 +445,8 @@ class Mosaic {
      */
     getTileText(x, y) {
         // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            const tile = this.getTile(x, y);
-
-            return tile.innerText;
-        }
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height)
+            return this.getTile(x, y).text;
     }
 
     /**
@@ -353,23 +454,17 @@ class Mosaic {
      */
     setTileOnClick(x, y, func) {
         // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            const tile = this.getTile(x, y);
-
-            tile.addEventListener("click", func);
-        }
-    };
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height) 
+            this.getTile(x, y).onClick = func;
+    }
 
     /**
      * Set the tile mouseover function.
      */
     setTileOnMouseOver(x, y, func) {
         // bounds checking
-        if (x >= 0 && x < this._width && y >= 0 && y < this._height) {
-            const tile = this.getTile(x, y);
-
-            tile.addEventListener("mouseover", func);
-        }
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height)
+            this.getTile(x, y).onMouseOver = func;
     }
 
     /**
@@ -377,14 +472,14 @@ class Mosaic {
      */
     static loop(func, time) {
         setInterval(func, time);
-    };
+    }
 
     /**
      * Clear the Mosaic's tile color values.
      */
     clear() {
-        for (var i = 0; i < this._width; i++) 
-            for (var j = 0; j < this._height; j++) 
-                this.setTileColor(i, j, '#eeeeee');
-    };
+        for (let x = 0; x < this._width; x++) 
+            for (let y = 0; y < this._height; y++) 
+                this.getTile(x, y).color = "#eeeeee";
+    }
 }

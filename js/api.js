@@ -112,6 +112,15 @@ class Tile {
         this._text = "";
     }
 
+    static setSize(size) {
+        // change the size of table cells
+        const sheet = new CSSStyleSheet();
+        sheet.replaceSync("td { padding: " + size + "px }");
+
+        // apply the stylesheet to the document
+        document.adoptedStyleSheets = [sheet];
+    }
+
     get borderColor() {
         return this._borderColor;
     }

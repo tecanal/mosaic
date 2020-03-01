@@ -480,7 +480,13 @@ class Mosaic {
      * A wrapper function to allow animation looping.
      */
     static loop(func, time) {
-        setInterval(func, time);
+        this.loopId = setInterval(func, time);
+    }
+
+    static stopLoop() {
+        clearInterval(this.loopId);
+
+        this.loopId = 0;
     }
 
     /**

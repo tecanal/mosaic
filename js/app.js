@@ -112,7 +112,91 @@ const LESSONS = [
 ];
 
 const DOCS = [
-
+    {
+        name: "Tips",
+        blocks: [
+            {
+                type: "h2",
+                content: "Tips and Tricks"
+            },
+            {
+                type: "ol",
+                blocks: [
+                    {
+                        type: "li",
+                        content: "The code you write is automatically saved locally on your browser, so you don't have to worry about losing code."
+                    },
+                    {
+                        type: "li",
+                        content: "If you get an infinite loop, refresh the page. You could also just exit out of the tab, and reopen it."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        name: "Mosaic",
+        blocks: [
+            {
+                type: "h2",
+                content: "Mosaic Methods"
+            },
+            {
+                type: "b",
+                content: "Mosaic(width, height): "
+            },
+            {
+                type: "span",
+                content: "Creates a new Mosaic object."
+            },
+            {
+                type: "code",
+                content: "const moz = new Mosaic(5, 5);"
+            },
+            {
+                type: "b",
+                content: "setTileColor(x, y, color): "
+            },
+            {
+                type: "span",
+                content: "Sets a tiles's color value."
+            },
+            {
+                type: "code",
+                content: "// with color name\nmoz.setTileColor(0, 0, \"gold\");\n\n// with hex value\nmoz.setTileColor(0, 0, \"#3954AE\");"
+            }
+        ]
+    },
+    {
+        name: "Tile",
+        blocks: [
+            {
+                type: "h2",
+                content: "Tile Methods"
+            },
+            {
+                type: "b",
+                content: ".color"
+            },
+            {
+                type: "b",
+                content: "setColor"
+            }
+        ]
+    },
+    {
+        name: "Color",
+        blocks: [
+            {
+                type: "h2",
+                content: "Color Methods"
+            },
+            {
+                type: "b",
+                content: "Mosaic(width, height)"
+            }
+        ]
+    }
 ];
 
 let delay;
@@ -195,6 +279,7 @@ window.onload = () => {
     });
 
     renderLessons();
+    renderHelp();
 }
 
 // listen for escape key press
@@ -225,6 +310,16 @@ function renderLessons() {
 
         // render the blocks for that lesson
         renderBlocks(lesson.blocks, lessonContainer);
+    });
+}
+
+function renderHelp() {
+    DOCS.forEach(api => {
+        const apiContainer = document.createElement("div");
+        apiContainer.id = api.name.toLowerCase();
+        
+        document.getElementById("help").appendChild(apiContainer);
+        renderBlocks(api.blocks, apiContainer);
     });
 }
 
@@ -268,9 +363,13 @@ function openModal(content) {
     }
     else if (content == "help") {
         title = "Mosaic Help"
+
+        document.getElementById("help").style.display = "";
     }
     else if (content == "about") {
         title = "About Mosaic";
+
+        document.getElementById("about").style.display = "";
     }
 
     document.getElementById("modalTitle").innerText = title;

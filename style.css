@@ -31,17 +31,11 @@ a {
     color: black; 
 }
 
-#lessons p { 
-    line-height: 1.5; 
-}
-#lessons pre { 
-    border: 1px solid rgba(0,0,0,.125); 
-    border-radius: .25rem; 
-    padding: 1rem; 
-}
-.lesson.active { 
-    display: block !important; 
-}
+#lessons p {  line-height: 1.5;  }
+#lessons pre, #help pre {  border: 1px solid rgba(0,0,0,.125);  border-radius: .25rem;  padding: 1rem; }
+.lesson.active { display: block !important; }
+
+#help h2 { margin-top: 0px; margin-bottom: 10px; }
 
 #learningPath {  list-style: none; line-height: 1.5;}
 #learningPath li {  height: 25px; width: 25px; background-color: #bbb; border-radius: 50%; display: inline-block; text-align: center; }

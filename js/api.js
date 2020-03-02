@@ -214,7 +214,7 @@ class Tile {
         this.cell.style.backgroundImage = '-webkit-linear-gradient(' + colors.join(", ") + ')';
     }
 
-    setTileGradient(colors) {
+    setGradient(...colors) {
         this.gradient = colors;
 
         return this;

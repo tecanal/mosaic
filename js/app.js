@@ -164,7 +164,43 @@ const DOCS = [
             {
                 type: "code",
                 content: "// with color name\nmoz.setTileColor(0, 0, \"gold\");\n\n// with hex value\nmoz.setTileColor(0, 0, \"#3954AE\");"
-            }
+            },
+            {
+                type: "b",
+                content: "getTileColor(x, y): "
+            },
+            {
+                type: "span",
+                content: "Gets a tiles's color value."
+            },
+            {
+                type: "code",
+                content: "moz.getTileColor(0, 0);"
+            },
+            {
+                type: "b",
+                content: "setTileGradient(x, y, ...colors): "
+            },
+            {
+                type: "span",
+                content: "Sets a tiles's gradient."
+            },
+            {
+                type: "code",
+                content: "// it can take any number of color parameter values\nmoz.setTileGradient(0, 0, \"gold\", \"red\", \"blue\");\n\n// or take an array\nmoz.setTileGradient(0, 0, [\"gold\", \"red\", \"blue\"]);"
+            },
+            {
+                type: "b",
+                content: "getTileGradient(x, y): "
+            },
+            {
+                type: "span",
+                content: "Gets a tiles's gradient value."
+            },
+            {
+                type: "code",
+                content: "moz.getTileGradient(0, 0);"
+            },
         ]
     },
     {
@@ -267,6 +303,9 @@ window.onload = () => {
             // clear the console log view
             clearConsole();
 
+            // clear evnet listeners
+            clearEventListeners();
+
             // if localStorage is available, save the code
             if (hasLocalStorage)
                 localStorage.setItem("code", editor.getValue());
@@ -321,6 +360,14 @@ function renderHelp() {
         document.getElementById("help").appendChild(apiContainer);
         renderBlocks(api.blocks, apiContainer);
     });
+}
+
+function clearEventListeners() {
+    document.onclick = () => {};
+    document.onkeydown = () => {};
+    document.onkeypress = () => {};
+    document.onkeyup = () => {};
+    document.onmouseover = () => {};
 }
 
 // document.querySelectorAll("#learningPath li a").forEach(el => el.onclick = selectLesson);
@@ -404,6 +451,7 @@ function runCode() {
     autoRun = true;
 
     // Run the user's code for the first time
+    clearEventListeners();
     executeCode();
 }
 
@@ -426,6 +474,9 @@ function stopRunning() {
     // clear all intervals from Mosiac.loop()
     for (let i = 1; i < 999999; i++)
         window.clearInterval(i);
+
+    // clear any event listeners that were bound
+    clearEventListeners();
 }
 
 /**

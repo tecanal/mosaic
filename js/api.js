@@ -276,7 +276,7 @@ class Tile {
  * The Mosaic class.
  */
 class Mosaic {
-    constructor(height, width) {
+    constructor(width, height) {
         // Set the height and width
         this._height = height;
         this._width = width;

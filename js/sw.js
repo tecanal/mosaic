@@ -1,30 +1,30 @@
-const CACHE_NAME = "v1";
+const CACHE_NAME = "v2.0.0";
 const URLS_TO_CACHE = [
-    "/index.html",
+    "../index.html",
     
-    "/codemirror/codemirror.css",
-    "/codemirror/addon/fold/foldgutter.css",
-    "/css/style.css",
+    "../codemirror/codemirror.css",
+    "../codemirror/addon/fold/foldgutter.css",
+    "../css/style.css",
 
-    "/codemirror/codemirror.js",
-    "/codemirror/formatting.js",
+    "../codemirror/codemirror.js",
+    "../codemirror/formatting.js",
 
-    "/codemirror/addon/runmode/runmode.js",
-    "/codemirror/mode/javascript/javascript.js",
+    "../codemirror/addon/runmode/runmode.js",
+    "../codemirror/mode/javascript/javascript.js",
 
-    "/codemirror/addon/fold/foldcode.js",
-    "/codemirror/addon/fold/foldgutter.js",
-    "/codemirror/addon/fold/brace-fold.js",
-    "/codemirror/addon/fold/comment-fold.js",
+    "../codemirror/addon/fold/foldcode.js",
+    "../codemirror/addon/fold/foldgutter.js",
+    "../codemirror/addon/fold/brace-fold.js",
+    "../codemirror/addon/fold/comment-fold.js",
 
-    "/codemirror/addon/edit/closebrackets.js",
-    "/codemirror/addon/selection/active-line.js",
+    "../codemirror/addon/edit/closebrackets.js",
+    "../codemirror/addon/selection/active-line.js",
 
-    "/js/jquery-resizable.min.js",
-    "/js/jquery.slim.min.js",
+    "./jquery-resizable.min.js",
+    "./jquery.slim.min.js",
 
-    "/js/api.js",
-    "/js/app.js"
+    "./api.js",
+    "./app.js"
 ];
 
 /**

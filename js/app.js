@@ -256,6 +256,8 @@ window.onload = () => {
         autoCloseBrackets: true,
         lineNumbers: true,
         indentWithTabs: true,
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         indentUnit: 4,
         lineWrapping: true,
         styleActiveLine: { nonEmpty: true },

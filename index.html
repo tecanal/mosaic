@@ -1,11 +1,18 @@
 <html>
     <head>
-        <title>Learning JavaScript with Mosaic</title>
+        <title>TeCanal Mosaic</title>
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:title" content="TeCanal Mosaic"/>
+        <meta property="og:url" content="https://tecanal.org/mosaic/"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:description" 
+            content="Learn JavaScript visually and without having to learn HTML and CSS at the same time."/>
 
         <link rel="stylesheet" href="codemirror/codemirror.css">
         <link rel="stylesheet" href="codemirror/addon/fold/foldgutter.css">
-        <link rel="stylesheet" href="style.css">
+
+        <link rel="stylesheet" href="css/style.css">
     </head>
 
     <body>
@@ -20,20 +27,18 @@
         </div>
 
         <div class="panel-container">
-            <!-- CodeMirrorEditor -->
             <div class="panel-left" style="width: 50%">
                 <div id="editor"></div>
             </div>
 
             <div class="splitter"></div>
 
-            <!-- HTML Preview -->
             <div class="panel-right" style="height: 100%; overflow: scroll">
                 <div id="preview">
-                    <table class="mb-2" id="mosaic"></table>
+                    <table id="mosaic"></table>
                 
                     <b>Console (<a href="javascript:clearConsole();">Clear</a>):</b>
-                    <div id="console" readonly></div>
+                    <div id="console"></div>
                 </div>
             </div>
         </div>
@@ -78,7 +83,6 @@
             </div>
         </div>
 
-        <!-- CodeMirror JavaScript -->
         <script src="codemirror/codemirror.js"></script>
         <script src="codemirror/formatting.js"></script>
 
@@ -93,8 +97,7 @@
         <script src="codemirror/addon/runmode/runmode.js"></script>
         <script src="codemirror/mode/javascript/javascript.js"></script>
 
-        <!-- Splitter Panel JavaScript -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="js/jquery.slim.min.js"></script>
         <script src="js/jquery-resizable.min.js"></script>
 
         <script src="js/api.js"></script>

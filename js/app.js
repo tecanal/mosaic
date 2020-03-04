@@ -244,6 +244,9 @@ let autoRun = false;
 window.onerror = (message, url, lineNum, colNum, error) => console.error(message);
 
 window.onload = () => {
+    if ("serviceWorker" in navigator) 
+        navigator.serviceWorker.register("js/sw.js");
+
     // create splitter panel
     $(".panel-left").resizable({
         handleSelector: ".splitter",

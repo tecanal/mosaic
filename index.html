@@ -23,7 +23,7 @@
             <a href="javascript:void(0)" onclick="openModal('about')">About</a>
 
             <button disabled id="stopRunning" onclick="stopRunning()" style="float: right">Stop Running</button>
-            <button id="runCode" onclick="runCode()" style="float: right">Run Code</button>
+            <button id="runCode" class="button-glow" onclick="runCode()" style="float: right">Run Code</button>
         </div>
 
         <div class="panel-container">
@@ -37,7 +37,9 @@
                 <div id="preview">
                     <table id="mosaic"></table>
                 
-                    <b>Console (<a href="javascript:clearConsole();">Clear</a>):</b>
+                    <p style="margin-top: .5em; margin-bottom: .5em">
+                        <b style="margin-top: .5em">Console (<a href="javascript:clearConsole();">Clear</a>):</b>
+                    </p>
                     <div id="console"></div>
                 </div>
             </div>

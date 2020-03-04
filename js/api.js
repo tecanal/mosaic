@@ -498,3 +498,28 @@ class Mosaic {
                 this.getTile(x, y).color = "#eeeeee";
     }
 }
+
+class Player {
+    static setVoice(voice) {
+        this.voice = voice;
+    }
+
+    static play(url) {
+        const audio = new Audio(url);
+
+        audio.play();
+    }
+
+    static speak(text) {
+        const utterThis = new SpeechSynthesisUtterance(text);
+
+        if (this.voice)
+            utterThis.voice = this.voice;
+
+        window.speechSynthesis.speak(utterThis);
+    }
+
+    static getVoices() {
+        return window.speechSynthesis.getVoices().map(voice => voice);
+    }
+}

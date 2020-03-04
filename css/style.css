@@ -1,27 +1,43 @@
-html { 
-    font-family: sans-serif; 
-}
-body { 
-    margin: 0; 
-}
-a { 
-    text-decoration: none; 
-    color: #007BFF; 
-}
+html {  font-family: sans-serif; }
+body { margin: 0; }
+a { text-decoration: none; color: #007BFF; }
 
-.nav { 
-    overflow: hidden; 
-    background-color: #3954AE; 
-    height: 6vh; 
-}
+.nav {  overflow: hidden; background-color: #3954AE; height: 8vh; }
 .nav a { 
     float: left; 
     display: block; 
     color: #f2f2f2; 
     text-align: center; 
-    padding: 14px 16px; 
+    padding-top: 3vh;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 4vh;
     text-decoration: none; 
 }
+
+#runCode { 
+    background-color: #28A745; 
+    padding-top: 3vh;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 4vh;
+    color: white; 
+    font-size: 1rem; 
+}
+
+#stopRunning {
+    background-color: #DC3545; 
+    padding-top: 3vh;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 4vh;
+    color: white; 
+    font-size: 1rem; 
+}
+
+button[disabled] { opacity: .65; }
+a.disabled:hover {color: white; cursor: default; }
+
 .nav a.active { 
     background-color: #4CAF50; 
     color: white; 
@@ -121,9 +137,7 @@ table, th, td { border: 1px solid black; }
 
 td { padding: 20px; }
 
-/* #nav { border: none; margin-bottom: 0; height: 10vh; border-radius: 0px; } */
-
-.panel-container { height: 94vh; padding: 0; margin: 0; }
+.panel-container { height: 92vh; padding: 0; margin: 0; }
 
 #editor { padding: 0; margin: 0;}
 
@@ -131,12 +145,7 @@ td { padding: 20px; }
             
 #console { width: 100%; background: white; border: 1px solid gray; height: 30%; overflow-y: scroll; }
 
-#console * { padding: 10px; }
-
-#runCode { background-color: #28A745; padding: 14px 16px; color: white; font-size: 1rem; }
-#stopRunning {background-color: #DC3545; padding: 14px 16px; color: white; font-size: 1rem; }
-button[disabled] { opacity: .65; }
-a.disabled:hover {color: white; cursor: default; }
+#console * { padding-right: 10px; padding-left: 10px; padding-top: 3px; padding-bottom: 3px;}
 
 /* https://codepen.io/jpost-design/pen/EKZLzK */
 @keyframes glowing {

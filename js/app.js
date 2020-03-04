@@ -235,6 +235,8 @@ const DOCS = [
     }
 ];
 
+const synth = window.speechSynthesis;
+
 let delay;
 let firstRun = true;
 let hasLocalStorage = false;
@@ -255,7 +257,7 @@ window.onload = () => {
 
     // create CodeMirror editor
     let editor = CodeMirror(document.getElementById("editor"), {
-        mode: "javascript",
+        mode: { name: "javascript", json: true },
         autoCloseBrackets: true,
         lineNumbers: true,
         indentWithTabs: true,
@@ -543,13 +545,34 @@ function executeCode() {
     const oldError = console.error;
     const consoleEl = document.getElementById("console");
 
+    const arrayConstructor = [].constructor;
+    const objectConstructor = ({}).constructor;
+
     console.log = function(message) {
-        // Append value to the end if there is already log output
-        if (consoleEl.innerHTML)
-            consoleEl.innerHTML += "<br>" + message;
-        // Set the new value of log output
-        else
-            consoleEl.innerHTML = message;
+        // stringify JSON and arrays
+        if (message.constructor == objectConstructor) {
+            // create code block as pre to keep whitespace
+            const el = document.createElement("div");
+
+            // add code mirror className so syntax highlighting works
+            el.className = "cm-s-default";
+                        
+            // run CodeMirror syntax highlighting on the code
+            CodeMirror.runMode(JSON.stringify(message), { name: "javascript" }, el);
+
+            consoleEl.appendChild(el);
+        }
+        else {
+            if (message.constructor == arrayConstructor)
+                message = "[" + message.join(", ") + "]";
+
+            // Append value to the end if there is already log output
+            if (consoleEl.innerHTML)
+                consoleEl.innerHTML += "<br>" + message;
+            // Set the new value of log output
+            else
+                consoleEl.innerHTML = message;
+        }
 
         consoleEl.scrollTop = consoleEl.scrollHeight;
 

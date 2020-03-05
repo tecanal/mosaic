@@ -1,0 +1,114 @@
+{
+    "lessons": [
+        {
+            "name": "Variables",
+            "blocks": [
+                {
+                    "type": "h1",
+                    "content": "Variables"
+                },
+                {
+                    "type": "p",
+                    "content": "Think of a variable as a labeled container that can hold different kinds of things. Instead of holding food or clothes, variables hold data. Just as there are different types of containers, there are different types of variables. You <i>create</i> a variable, and <i>assign</i> it a value."
+                },
+                {
+                    "type": "p",
+                    "content": "In JavaScript, you can have a variable that changes value (<i>mutable</i>) or one that does not change value (<i>immutable</i>). For mutable variables, you use <b>let</b> and for immutable variables, you use <b>const</b>."
+                },
+                {
+                    "type": "code",
+                    "content": "const myName = \"Rees\";\n\nlet myAge = 19;"
+                },
+                {
+                    "type": "p",
+                    "content": "A more advanced type of JavaScript variables are something called objects. An object is a copy of a class, where a class is a collection of variables, and something else that you will learn later called functions. When you create a copy, or instance, of a class, you can use that variable to access the variables and functions of that object."
+                },
+                {
+                    "type": "code",
+                    "content": "const moz = new Mosaic(5, 5);"
+                }
+            ]
+        },
+        {
+            "name": "Calling Functions",
+            "blocks": [
+                {
+                    "type": "h1",
+                    "content": "Calling Functions"
+                },
+                {
+                    "type": "p",
+                    "content": "Functions are lines of code that have been grouped together and can be called upon by a name. Functions can be attached to an object, or just for general use. When you call a function, you sometimes pass parameters to the function. There are pre-defined inputs that the function expects, you give them by putting them in parenthesis after the function name."
+                }
+            ]
+        },
+        {
+            "name": "Conditionals",
+            "blocks": [
+                {
+                    "type": "h1",
+                    "content": "Conditionals"
+                },
+            { 
+                    "type": "p",
+                    "content": "Conditionals are statement that check conditions, which can be either true or false, and then do something depending on that state. Sometimes they are referred to as If-Then, Else-Then statements. If you want to check multiple conditions after each other, you can use else if. If, else if, and else statements are evaluated in sequential order, so you must be careful. If you have an else or an else if, you must have an if before it, but if you have an if, you do not need anything additional."
+                }
+            ]
+        },
+        {
+            "name": "Loops",
+            "blocks": [
+                {
+                    "type": "h1",
+                    "content": "Loops"
+                },
+                {
+                    "type": "p",
+                    "content": "The loop header has the 1. variable initialization, 2. the condition, and 3. the variable mutation."
+                },
+                {
+                    "type": "ol",
+                    "blocks": [
+                        {
+                            "type": "li",
+                            "content": "Variable initialization only happens at the first iteration (a.k.a run through) of the loop. It sets up our counter."
+                        },
+                        {
+                            "type": "li",
+                            "content": "The condition is checked before every iteration to check if the loop should run or not."
+                        },
+                        {
+                            "type": "li",
+                            "content": "The variable is then mutated, you can do any math operation you want to on the variable."
+                        }
+                    ]
+                },
+                {
+                    "type": "code",
+                    "content": "for (let i = 0; i < moz.width; i++)"
+                },
+                {
+                    "type": "p",
+                    "content": "You can also put loops inside of other loops, this is called nesting. The inner loops finish first, then goes outwards."
+                }
+            ]
+        },
+        {
+            "name": "Creating Functions",
+            "blocks": [
+                {
+                    "type": "p",
+                    "content": "As previously written, functions are lines of code that have been grouped together and can be called upon by a name. These functions can take inputs called parameters, and can return outputs."
+                },
+                {
+                    "type": "p",
+                    "content": "You can have two functions with the same name, as long as they have different parameters, or orders of parameters. This is called function overloading."
+                },
+                {
+                    "type": "code",
+                    "content": "const moz = new Mosaic(5, 5);\n\nfunction drawLine() {\n\tfor (let x = 0; x < moz.width; x++) {\n\t\tmoz.setTileColor(x, 0, \"blue\");\n\t}\n}"
+                }
+            ]
+        }
+    ]
+}

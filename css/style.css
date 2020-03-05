@@ -80,6 +80,8 @@ a.disabled:hover {color: white; cursor: default; }
     animation-duration: 0.4s;
 }
 
+.modal-body { height: 80vh; overflow-y: scroll; }
+
 /* Add Animation */
 @-webkit-keyframes animatetop {
     from {top:-300px; opacity:0} 

@@ -1,6 +1,9 @@
-const CACHE_NAME = "v2.2.0";
+const CACHE_NAME = "v2.2.1";
 const URLS_TO_CACHE = [
     "../index.html",
+
+    "../data/docs.json",
+    "../data/lessons.json",
     
     "../codemirror/codemirror.css",
     "../codemirror/addon/fold/foldgutter.css",

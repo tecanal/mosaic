@@ -1,0 +1,38 @@
+{
+    "docs": [
+        {
+            "name": "Mosaic",
+            "functions": [
+                {
+                    "name": "setTileColor",
+                    "description": "Sets a tile's color.",
+                    "parameters": [ 
+                        { 
+                            "name": "x", 
+                            "type": "Integer"
+                        }, 
+                        {
+                            "name": "y", "type": "Integer"
+                        }, 
+                        {
+                            "name": "color", 
+                            "type": "Color"
+                        } 
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Tile",
+            "functions": []
+        },
+        {
+            "name": "Color",
+            "functions": []
+        },
+        {
+            "name": "Player",
+            "functions": []
+        }
+    ]
+}

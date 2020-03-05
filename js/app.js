@@ -112,127 +112,28 @@ const LESSONS = [
 ];
 
 const DOCS = [
-    {
-        name: "Tips",
-        blocks: [
-            {
-                type: "h2",
-                content: "Tips and Tricks"
-            },
-            {
-                type: "ol",
-                blocks: [
-                    {
-                        type: "li",
-                        content: "The code you write is automatically saved locally on your browser, so you don't have to worry about losing code."
-                    },
-                    {
-                        type: "li",
-                        content: "If you get an infinite loop, refresh the page. You could also just exit out of the tab, and reopen it."
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        name: "Mosaic",
-        blocks: [
-            {
-                type: "h2",
-                content: "Mosaic Methods"
-            },
-            {
-                type: "b",
-                content: "Mosaic(width, height): "
-            },
-            {
-                type: "span",
-                content: "Creates a new Mosaic object."
-            },
-            {
-                type: "code",
-                content: "const moz = new Mosaic(5, 5);"
-            },
-            {
-                type: "b",
-                content: "setTileColor(x, y, color): "
-            },
-            {
-                type: "span",
-                content: "Sets a tiles's color value."
-            },
-            {
-                type: "code",
-                content: "// with color name\nmoz.setTileColor(0, 0, \"gold\");\n\n// with hex value\nmoz.setTileColor(0, 0, \"#3954AE\");"
-            },
-            {
-                type: "b",
-                content: "getTileColor(x, y): "
-            },
-            {
-                type: "span",
-                content: "Gets a tiles's color value."
-            },
-            {
-                type: "code",
-                content: "moz.getTileColor(0, 0);"
-            },
-            {
-                type: "b",
-                content: "setTileGradient(x, y, ...colors): "
-            },
-            {
-                type: "span",
-                content: "Sets a tiles's gradient."
-            },
-            {
-                type: "code",
-                content: "// it can take any number of color parameter values\nmoz.setTileGradient(0, 0, \"gold\", \"red\", \"blue\");\n\n// or take an array\nmoz.setTileGradient(0, 0, [\"gold\", \"red\", \"blue\"]);"
-            },
-            {
-                type: "b",
-                content: "getTileGradient(x, y): "
-            },
-            {
-                type: "span",
-                content: "Gets a tiles's gradient value."
-            },
-            {
-                type: "code",
-                content: "moz.getTileGradient(0, 0);"
-            },
-        ]
-    },
-    {
-        name: "Tile",
-        blocks: [
-            {
-                type: "h2",
-                content: "Tile Methods"
-            },
-            {
-                type: "b",
-                content: ".color"
-            },
-            {
-                type: "b",
-                content: "setColor"
-            }
-        ]
-    },
-    {
-        name: "Color",
-        blocks: [
-            {
-                type: "h2",
-                content: "Color Methods"
-            },
-            {
-                type: "b",
-                content: "Mosaic(width, height)"
-            }
-        ]
-    }
+   {
+       name: "Mosaic",
+       functions: [
+           {
+               name: "setTileColor",
+               description: "Sets a tile's color.",
+               parameters: [ {name: "x", type: "Integer"}, {name: "y", type: "Integer"}, {name: "color", type: "Color"} ]
+           }
+       ]
+   },
+   {
+       name: "Tile",
+       functions: []
+   },
+   {
+       name: "Color",
+       functions: []
+   },
+   {
+       name: "Player",
+       functions: []
+   }
 ];
 
 const synth = window.speechSynthesis;
@@ -325,7 +226,7 @@ window.onload = () => {
     });
 
     renderLessons();
-    renderHelp();
+    // renderHelp();
 }
 
 // listen for escape key press
@@ -361,12 +262,30 @@ function renderLessons() {
 
 function renderHelp() {
     DOCS.forEach(api => {
-        const apiContainer = document.createElement("div");
-        apiContainer.id = api.name.toLowerCase();
+        api.functions.forEach(func => {
+            const params = func.parameters.map(param => param.name);
+            const args = func.parameters.map(param => getRandomArg(param.type));
+
+            const functionHeader = func.name + "(" + params.join(", ") + ");";
+            const functionCall = func.name + "(" + args.join(", ") + ");";
+
+            // console.log(functionHeader)
+            // console.log(functionCall)
+        });
+        // const apiContainer = document.createElement("div");
+        // apiContainer.id = api.name.toLowerCase();
         
-        document.getElementById("help").appendChild(apiContainer);
-        renderBlocks(api.blocks, apiContainer);
+        // document.getElementById("help").appendChild(apiContainer);
+        // renderBlocks(api.blocks, apiContainer);
     });
+}
+
+function getRandomArg(type) {
+    if (type == "Integer") {
+        return Math.floor(Math.random() * 10);
+    }
+    else if (type == "Color")
+        return Color.random();
 }
 
 function clearEventListeners() {
@@ -550,7 +469,7 @@ function executeCode() {
 
     console.log = function(message) {
         // stringify JSON and arrays
-        if (message.constructor == objectConstructor) {
+        if (message && message.constructor == objectConstructor) {
             // create code block as pre to keep whitespace
             const el = document.createElement("div");
 
@@ -563,7 +482,7 @@ function executeCode() {
             consoleEl.appendChild(el);
         }
         else {
-            if (message.constructor == arrayConstructor)
+            if (message && message.constructor == arrayConstructor)
                 message = "[" + message.join(", ") + "]";
 
             // Append value to the end if there is already log output

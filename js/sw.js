@@ -1,4 +1,4 @@
-const CACHE_NAME = "v2.1.0";
+const CACHE_NAME = "v2.2.0";
 const URLS_TO_CACHE = [
     "../index.html",
     
@@ -55,18 +55,10 @@ self.addEventListener("activate", event => {
 });
 
 /**
- * Intercept network calls.
+ * Intercept network calls. Send from cache or network.
  */
-self.addEventListener("fetch", event => {
+self.addEventListener('fetch', event => {
     event.respondWith(
-        caches.match(event.request).then(resp => {
-            return resp || fetch(event.request).then(response => {
-                return caches.open(CACHE_NAME).then(cache => {
-                    cache.put(event.request, response.clone());
-
-                    return response;
-                });  
-            });
-        })
+        caches.match(event.request).then(response => response || fetch(event.request))
     );
 });

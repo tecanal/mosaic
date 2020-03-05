@@ -35,17 +35,20 @@ a { text-decoration: none; color: #007BFF; }
     font-size: 1rem; 
 }
 
+.panel-container { height: 92vh; padding: 0; margin: 0; }
+
+/* For high resolution desktops */
+/* @media (min-width: 1281px) {
+    .nav { height: 4vh; }
+    .nav a, #runCode, #stopRunning { padding: 14px 16px; }
+    .panel-container { height: 96vh; }
+} */
+
 button[disabled] { opacity: .65; }
 a.disabled:hover {color: white; cursor: default; }
 
-.nav a.active { 
-    background-color: #4CAF50; 
-    color: white; 
-}
-.nav a:hover { 
-    background-color: #ddd; 
-    color: black; 
-}
+.nav a.active { background-color: #4CAF50; color: white; }
+.nav a:hover { background-color: #ddd; color: black; }
 
 #lessons p {  line-height: 1.5;  }
 #lessons pre, #help pre {  border: 1px solid rgba(0,0,0,.125);  border-radius: .25rem;  padding: 1rem; }
@@ -137,7 +140,7 @@ table, th, td { border: 1px solid black; }
 
 td { padding: 20px; }
 
-.panel-container { height: 92vh; padding: 0; margin: 0; }
+
 
 #editor { padding: 0; margin: 0;}
 

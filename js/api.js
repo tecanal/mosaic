@@ -118,7 +118,21 @@ class Tile {
         sheet.replaceSync("td { padding: " + size + "px }");
 
         // apply the stylesheet to the document
-        document.adoptedStyleSheets = [sheet];
+        if (document.adoptedStyleSheets)
+            document.adoptedStyleSheets = document.adoptedStyleSheets.concat(sheet);
+        else
+            document.adoptedStyleSheets = [sheet];
+    }
+
+    static setRadius(radius) {
+        const sheet = new CSSStyleSheet();
+        sheet.replaceSync("td { border-radius: " + radius + "%; }");
+
+        // apply the stylesheet to the document
+        if (document.adoptedStyleSheets)
+            document.adoptedStyleSheets = document.adoptedStyleSheets.concat(sheet);
+        else
+            document.adoptedStyleSheets = [sheet];
     }
 
     get borderColor() {

@@ -113,6 +113,36 @@ window.onclick = e => {
         modal.style.display = "none";
 }
 
+function exportPage() {
+    // need reference to editor so we can get the user's code
+    let editor = document.querySelector('.CodeMirror').CodeMirror;
+
+    // get API functions from the js file
+    fetch("/js/api.js")
+    .then(response => response.text())
+    .then(scriptText => {
+        // build html of page
+        const style = "html {  font-family: sans-serif; } table { border-collapse: collapse; margin: auto; } table, th, td { border: 1px solid black; } td { padding: 20px; } #console { width: 50%; margin: auto; box-sizing: border-box; padding: 10px; margin-top: 10px; background: white; border: 1px solid gray; height: 30%; overflow-y: scroll; }";
+
+        const scripts = "<script>" + scriptText + '(function() { const oldLog = console.log; const consoleEl = document.getElementById("console"); console.log = message => {consoleEl.innerHTML += message + "<br>"; consoleEl.scrollTop = consoleEl.scrollHeight; oldLog.apply(console, arguments);} })();' + "</script>" + "<script>" + editor.getValue() + "</script>";
+
+        let html = "<html><head><title>Mosaic Export</title><style>" + style +'</style></head><body><table id="mosaic"></table><div id="console"></div>' + scripts + "</body></html>";
+
+        // create html blob with html we created
+        const blob = new Blob([html], { type: "text/html" });
+
+        // create a download link
+        const el = window.document.createElement("a");
+        el.href = window.URL.createObjectURL(blob);
+        el.download = "mosaic_export.html";    
+
+        // add link to document so we can click, then remove it
+        document.body.appendChild(el);
+        el.click();     
+        document.body.removeChild(el);
+    });
+}
+
 function renderLessons() {
     fetch("../data/lessons.json")
     .then(response => response.json())

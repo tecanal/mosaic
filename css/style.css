@@ -142,15 +142,11 @@ table, th, td { border: 1px solid black; }
 
 td { padding: 20px; }
 
-
-
 #editor { padding: 0; margin: 0;}
 
 .CodeMirror-activeline-background { background: #f5f5f5; }
             
-#console { width: 100%; background: white; border: 1px solid gray; height: 30%; overflow-y: scroll; }
-
-#console * { padding-right: 10px; padding-left: 10px; padding-top: 3px; padding-bottom: 3px;}
+#console { width: 100%; background: white; box-sizing: border-box; padding: 10px; border: 1px solid gray; height: 30%; overflow-y: scroll; }
 
 /* https://codepen.io/jpost-design/pen/EKZLzK */
 @keyframes glowing {

@@ -144,7 +144,7 @@ function exportPage() {
 }
 
 function renderLessons() {
-    fetch("../data/lessons.json")
+    fetch("/data/lessons.json")
     .then(response => response.json())
     .then(data => {
         // render all of the lessons
@@ -164,7 +164,7 @@ function renderLessons() {
 }
 
 function renderHelp() {
-    fetch("../data/lessons.json")
+    fetch("/data/docs.json")
     .then(response => response.json())
     .then(data => {
         data.docs.forEach(api => {

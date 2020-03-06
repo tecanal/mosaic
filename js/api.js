@@ -35,6 +35,10 @@ class Color {
      * @param  {...any} colors 
      */
     static isSame(...colors) {
+        // flatten array
+        if (colors.length)
+            colors = colors.flat();
+
         // if there are more than two colors, compare them
         if (colors.length >= 2) {
             // normalize colors so they are all in "R, G, B" format

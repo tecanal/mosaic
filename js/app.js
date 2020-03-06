@@ -9,7 +9,8 @@ let autoRun = false;
 window.onerror = (message, url, lineNum, colNum, error) => console.error(message);
 
 window.onload = () => {
-    if ("serviceWorker" in navigator) 
+    // if servicework available and not a development server
+    if ("serviceWorker" in navigator && window.location.hostname != "localhost") 
         navigator.serviceWorker.register("js/sw.js");
 
     // create splitter panel
@@ -95,7 +96,7 @@ window.onload = () => {
     });
 
     renderLessons();
-    // renderHelp();
+    renderHelp();
 }
 
 // listen for escape key press
@@ -164,36 +165,66 @@ function renderLessons() {
 }
 
 function renderHelp() {
+    const getObjectForCall = (api, isStatic) => {
+        if (isStatic)
+            return api;
+
+        if (api == "Mosaic")
+            return "moz";
+        else
+            return api;
+    }
+
+    const getRandomArg = type => {
+        if (type == "Integer") 
+            return Math.ceil(Math.random() * 15);
+        // from: https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+        else if (type == "String")
+            return '"' + Math.random().toString(36).replace(/[^a-z]+/g, '') + '"';
+        else if (type == "Color")
+            return '"' + Color.random() + '"';
+        else if (type == "[Color]")
+            return ['"' + Color.random() + '"', '"' + Color.random() + '"'];
+    }
+
     fetch("/data/docs.json")
     .then(response => response.json())
     .then(data => {
         data.docs.forEach(api => {
+            const apiContainer = document.createElement("div");
+            apiContainer.id = api.name.toLowerCase();
+            apiContainer.innerHTML += "<h2>" + api.name + "</h2>";
+
             api.functions.forEach(func => {
                 const params = func.parameters.map(param => param.name);
-                const args = func.parameters.map(param => getRandomArg(param.type));
 
-                const functionHeader = func.name + "(" + params.join(", ") + ");";
-                const functionCall = func.name + "(" + args.join(", ") + ");";
+                // fill in parameter values with arguments to create example call
+                const args = func.parameters.map(param => {if (param.type) return getRandomArg(param.type); else return param.content});
 
-                // console.log(functionHeader)
-                // console.log(functionCall)
+                // reconstruct what the function header is, and what a function call would look like
+                const functionHeader = func.name + "(" + params.join(", ") + ")";
+                const functionCall = getObjectForCall(api.name, func.isStatic) + "." + func.name + "(" + args.join(", ") + ");";
+
+                const blocks = [
+                    {
+                        type: "p", 
+                        content: "<b>" + functionHeader + "</b>: " + func.description
+                    }, 
+                    { 
+                        type: "code", 
+                        content: functionCall 
+                    }
+                ];
+
+                renderBlocks(blocks, apiContainer);
             });
-            // const apiContainer = document.createElement("div");
-            // apiContainer.id = api.name.toLowerCase();
+            
         
-            // document.getElementById("help").appendChild(apiContainer);
-            // renderBlocks(api.blocks, apiContainer);
+            document.getElementById("help").appendChild(apiContainer);
         });
     });
 }
 
-function getRandomArg(type) {
-    if (type == "Integer") {
-        return Math.floor(Math.random() * 10);
-    }
-    else if (type == "Color")
-        return Color.random();
-}
 
 function clearEventListeners() {
     document.onclick = () => {};
@@ -222,7 +253,11 @@ function clearEventListeners() {
 function openModal(content) {
     const modal = document.getElementById("myModal");
 
+    // show modal
     modal.style.display = "block";
+
+    // scroll to top
+    document.getElementsByClassName("modal-body")[0].scrollTop = 0;
 
     // hide all modal content possibilites
     for (const el of document.getElementsByClassName("modalContent"))
@@ -242,7 +277,7 @@ function openModal(content) {
         document.getElementById("examples").style.display = "";
     }
     else if (content == "help") {
-        title = "Mosaic Help"
+        title = "Coding Help"
 
         document.getElementById("help").style.display = "";
     }

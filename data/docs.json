@@ -6,6 +6,8 @@
                 {
                     "name": "setTileColor",
                     "description": "Sets a tile's color.",
+                    "notes": "You can set colors with HTML colors, hex, rgb(), or rgba() formats.",
+                    "isStatic": false,
                     "parameters": [ 
                         { 
                             "name": "x", 
@@ -19,20 +21,126 @@
                             "type": "Color"
                         } 
                     ]
+                },
+                {
+                    "name": "getTileColor",
+                    "description": "Gets a tile's color.",
+                    "isStatic": false,
+                    "parameters": [ 
+                        { 
+                            "name": "x", 
+                            "type": "Integer"
+                        }, 
+                        {
+                            "name": "y", "type": "Integer"
+                        }
+                    ]
+                },
+                {
+                    "name": "setTileGradient",
+                    "description": "Sets a tile's gradient.",
+                    "notes": "You can pass arguments as an array, or list of arguments.",
+                    "isStatic": false,
+                    "parameters": [ 
+                        { 
+                            "name": "x", 
+                            "type": "Integer"
+                        }, 
+                        {
+                            "name": "y", "type": "Integer"
+                        }, 
+                        {
+                            "name": "colors", 
+                            "type": "[Color]"
+                        } 
+                    ]
+                },
+                {
+                    "name": "getTileGradient",
+                    "description": "Gets a tile's gradient.",
+                    "isStatic": false,
+                    "parameters": [ 
+                        { 
+                            "name": "x", 
+                            "type": "Integer"
+                        }, 
+                        {
+                            "name": "y", "type": "Integer"
+                        }
+                    ]
                 }
             ]
         },
         {
             "name": "Tile",
-            "functions": []
+            "functions": [
+                {
+                    "name": "setSize",
+                    "description": "Sets the size of all the Mosaic tiles.",
+                    "isStatic": true,
+                    "parameters": [ 
+                        { 
+                            "name": "size", 
+                            "type": "Integer"
+                        }
+                    ]
+                },
+                {
+                    "name": "setRadius",
+                    "description": "Sets the circular-ness (radius) of all the Mosaic tiles.",
+                    "isStatic": true,
+                    "parameters": [ 
+                        { 
+                            "name": "size", 
+                            "type": "Integer"
+                        }
+                    ]
+                }
+            ]
         },
         {
             "name": "Color",
-            "functions": []
+            "functions": [
+                {
+                    "name": "isSame",
+                    "description": "Checks if given colors are the same.",
+                    "notes": "You can pass arguments as an array, or list of arguments.",
+                    "isStatic": true,
+                    "parameters": [ 
+                        { 
+                            "name": "colors", 
+                            "content": "['red', '#FF0000']"
+                        }
+                    ]
+                }
+            ]
         },
         {
             "name": "Player",
-            "functions": []
+            "functions": [
+                {
+                    "name": "play",
+                    "description": "Plays a sound file.",
+                    "isStatic": true,
+                    "parameters": [ 
+                        { 
+                            "name": "audioURL", 
+                            "content": "\"https://interactive-examples.mdn.mozilla.net/media/examples/t-rex-roar.mp3\""
+                        }
+                    ]
+                },
+                {
+                    "name": "speak",
+                    "description": "Uses SpeechSynthesis to speak the text out-loud.",
+                    "isStatic": true,
+                    "parameters": [ 
+                        { 
+                            "name": "toSpeak", 
+                            "type": "String"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

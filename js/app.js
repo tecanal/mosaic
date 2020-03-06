@@ -31,11 +31,18 @@ window.onload = () => {
         styleActiveLine: { nonEmpty: true },
         value: "const moz = new Mosaic(5, 5);\n\nmoz.setTileColor(0, 0, 'black');",
         extraKeys: {
-            "Ctrl-/": function(instance) { 
-                commentSelection(true);
-            },
+            "Ctrl-/": instance => commentSelection(true),
+            "Cmd-/": instance => commentSelection(true),
         }      
     });
+      
+    function commentSelection(isComment) {
+        const getSelectedRange  = () => ({ from: editor.getCursor(true), to: editor.getCursor(false) });
+        
+        const range = getSelectedRange();
+
+        editor.commentRange(isComment, range.from, range.to);
+    }
 
     // autofocus on editor input
     editor.focus();
@@ -237,6 +244,9 @@ function runCode() {
     // remove button glow
     document.getElementById("runCode").classList.toggle("button-glow");
 
+    // clear console
+    clearConsole();
+
     // disable button because auto-run is now enabled
     const el = document.getElementById("runCode");
     el.disabled = true;
@@ -256,6 +266,7 @@ function runCode() {
  */
 function stopRunning() {
     const runCodeButton = document.getElementById("runCode");
+
     // re-enable the run code button to restart the animation
     runCodeButton.disabled = false;
     runCodeButton.innerHTML = "Run Code";
@@ -326,69 +337,6 @@ function executeCode() {
     }
 }
 
-/**
- * Capture console.log() calls and display them onscreen.
- */
-(function() {
-    const oldLog = console.log;
-    const oldError = console.error;
-    const oldClear = console.clear;
-
-    const consoleEl = document.getElementById("console");
-
-    const arrayConstructor = [].constructor;
-    const objectConstructor = ({}).constructor;
-
-    console.log = function(message) {
-        // stringify JSON and arrays
-        if (message && message.constructor == objectConstructor) {
-            // create code block as pre to keep whitespace
-            const el = document.createElement("div");
-
-            // add code mirror className so syntax highlighting works
-            el.className = "cm-s-default";
-                        
-            // run CodeMirror syntax highlighting on the code
-            CodeMirror.runMode(JSON.stringify(message), { name: "javascript" }, el);
-
-            consoleEl.appendChild(el);
-        }
-        else {
-            if (message && message.constructor == arrayConstructor)
-                message = "[" + message.join(", ") + "]";
-
-            // Append value to the end if there is already log output
-            if (consoleEl.innerHTML)
-                consoleEl.innerHTML += "<br>" + message;
-            // Set the new value of log output
-            else
-                consoleEl.innerHTML = message;
-        }
-
-        consoleEl.scrollTop = consoleEl.scrollHeight;
-
-        oldLog.apply(console, arguments);
-    };
-
-    console.error = function(message) {
-        const consoleEl = document.getElementById("console");
-
-        if (consoleEl.innerHTML)
-            consoleEl.innerHTML += "<span style='color: red'><br>" + message + "</span>";
-        // Set the new value of error output
-        else
-            consoleEl.innerHTML = "<span style='color: red'>" + message + "</span>";
-
-        oldError.apply(console, arguments);
-    }
-
-    console.clear = () => {
-        consoleEl.innerHTML = "";
-
-        oldClear.apply(console);
-    }
-})();
-
 function renderBlocks(blocks, parent) {
     for (const block of blocks) {
         // if the block doesn't have blocks in it
@@ -429,16 +377,60 @@ function renderBlocks(blocks, parent) {
     }
 }
 
-function getSelectedRange() {
-    return { from: editor.getCursor(true), to: editor.getCursor(false) };
-}
-      
-function autoFormatSelection() {
-    const range = getSelectedRange();
-    editor.autoFormatRange(range.from, range.to);
-}
-      
-function commentSelection(isComment) {
-    const range = getSelectedRange();
-    editor.commentRange(isComment, range.from, range.to);
-}
+/**
+ * Capture console.log() calls and display them onscreen.
+ */
+(function() {
+    const oldLog = console.log;
+    const oldError = console.error;
+    const oldClear = console.clear;
+
+    const consoleEl = document.getElementById("console");
+
+    console.log = function(message) {
+        // stringify JSON and arrays
+        if (message && typeof message == "object") {
+            // create code block as pre to keep whitespace
+            const el = document.createElement("div");
+
+            // add code mirror className so syntax highlighting works
+            el.className = "cm-s-default";
+                        
+            // run CodeMirror syntax highlighting on the code
+            // CodeMirror.runMode(JSON.stringify(message), { name: "javascript" }, el);
+            consoleEl.innerHTML = JSON.stringify(message);
+
+            consoleEl.appendChild(el);
+        }
+        else {
+            // Append value to the end if there is already log output
+            if (consoleEl.innerHTML)
+                consoleEl.innerHTML += "<br>" + message;
+            // Set the new value of log output
+            else
+                consoleEl.innerHTML = message;
+        }
+
+        consoleEl.scrollTop = consoleEl.scrollHeight;
+
+        oldLog.apply(console, arguments);
+    };
+
+    console.error = function(message) {
+        const consoleEl = document.getElementById("console");
+
+        if (consoleEl.innerHTML)
+            consoleEl.innerHTML += "<span style='color: red'><br>" + message + "</span>";
+        // Set the new value of error output
+        else
+            consoleEl.innerHTML = "<span style='color: red'>" + message + "</span>";
+
+        oldError.apply(console, arguments);
+    }
+
+    console.clear = () => {
+        consoleEl.innerHTML = "";
+
+        oldClear.apply(console);
+    }
+})();

@@ -118,7 +118,7 @@ function exportPage() {
     let editor = document.querySelector('.CodeMirror').CodeMirror;
 
     // get API functions from the js file
-    fetch("/js/api.js")
+    fetch("js/api.js")
     .then(response => response.text())
     .then(scriptText => {
         // build html of page
@@ -144,7 +144,7 @@ function exportPage() {
 }
 
 function renderLessons() {
-    fetch("/data/lessons.json")
+    fetch("data/lessons.json")
     .then(response => response.json())
     .then(data => {
         // render all of the lessons

@@ -38,7 +38,19 @@
                 },
                 {
                     "type": "p",
-                    "content": "Functions are lines of code that have been grouped together and can be called upon by a name. Functions can be attached to an object, or just for general use. When you call a function, you sometimes pass parameters to the function. There are pre-defined inputs that the function expects, you give them by putting them in parenthesis after the function name."
+                    "content": "Functions are lines of code that have been grouped together and can be called upon by a name. Functions can be attached to an object, or just for general use."
+                },
+                {
+                    "type": "code",
+                    "content": "console.clear();"
+                },
+                {
+                    "type": "p",
+                    "content": "When you call a function, you sometimes pass parameters to the function. There are pre-defined inputs that the function expects, you give them by putting them in parenthesis after the function name."
+                },
+                {
+                    "type": "code",
+                    "content": "console.log(\"Hello, World!\");"
                 }
             ]
         },

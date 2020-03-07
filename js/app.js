@@ -187,7 +187,7 @@ function renderHelp() {
             return ['"' + Color.random() + '"', '"' + Color.random() + '"'];
     }
 
-    fetch("/data/docs.json")
+    fetch("data/docs.json")
     .then(response => response.json())
     .then(data => {
         data.docs.forEach(api => {
@@ -225,7 +225,6 @@ function renderHelp() {
     });
 }
 
-
 function clearEventListeners() {
     document.onclick = () => {};
     document.onkeydown = () => {};
@@ -233,22 +232,6 @@ function clearEventListeners() {
     document.onkeyup = () => {};
     document.onmouseover = () => {};
 }
-
-// document.querySelectorAll("#learningPath li a").forEach(el => el.onclick = selectLesson);
-
-// let currentLesson;
-// function selectLesson(lessonNum) {
-//     currentLesson = lessonNum;
-// }
-
-// selectLesson(0);
-
-// const lessonDivs = document.getElementsByClassName("lesson");
-
-// for (const div of lessonDivs) 
-//     div.style.display = "none";
-            
-// lessonDivs[currentLesson].classList.toggle("active");
 
 function openModal(content) {
     const modal = document.getElementById("myModal");
@@ -269,7 +252,6 @@ function openModal(content) {
         title = "Learn JavaScript";
 
         document.getElementById("lessons").style.display = "";
-        // document.getElementById("learningPath").style.display = "";
     }
     else if (content == "examples") {
         title = "Example Scripts";
@@ -292,7 +274,7 @@ function openModal(content) {
 
 function closeModal() { 
     const modal = document.getElementById("myModal");
-    modal.style.display = "none" 
+    modal.style.display = "none";
 }
 
 /**

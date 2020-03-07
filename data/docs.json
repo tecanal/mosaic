@@ -68,6 +68,40 @@
                             "name": "y", "type": "Integer"
                         }
                     ]
+                },
+                {
+                    "name": "setTileBorderColor",
+                    "description": "Sets a tile's border color.",
+                    "isStatic": false,
+                    "parameters": [ 
+                        { 
+                            "name": "x", 
+                            "type": "Integer"
+                        }, 
+                        {
+                            "name": "y", 
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "color",
+                            "type": "Color"
+                        }
+                    ]
+                },
+                {
+                    "name": "getTileBorderColor",
+                    "description": "Gets a tile's border color.",
+                    "isStatic": false,
+                    "parameters": [ 
+                        { 
+                            "name": "x", 
+                            "type": "Integer"
+                        }, 
+                        {
+                            "name": "y", 
+                            "type": "Integer"
+                        }
+                    ]
                 }
             ]
         },

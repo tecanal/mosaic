@@ -97,6 +97,7 @@ window.onload = () => {
 
     renderLessons();
     renderHelp();
+    renderExamples();
 }
 
 // listen for escape key press
@@ -144,6 +145,30 @@ function exportPage() {
     });
 }
 
+let examples = [];
+function renderExamples() {
+    const exampleEl = document.getElementById("examples");
+    let editor = document.querySelector('.CodeMirror').CodeMirror;
+
+    fetch("data/examples.json")
+    .then(response => response.json())
+    .then(data => {
+        data.examples.forEach(example => {
+            examples.push(example);
+
+            const p = document.createElement("p");
+
+            const button = document.createElement("button");
+            button.innerText = "Play " + example.name;
+            button.onclick = () => editor.setValue(example.code);
+
+            p.appendChild(button);
+
+            exampleEl.appendChild(p);
+        });
+    });
+}
+
 function renderLessons() {
     fetch("data/lessons.json")
     .then(response => response.json())
@@ -183,6 +208,8 @@ function renderHelp() {
             return '"' + Math.random().toString(36).replace(/[^a-z]+/g, '') + '"';
         else if (type == "Color")
             return '"' + Color.random() + '"';
+        else if (type == "Function")
+            return "function() { console.log(\"" + Math.random().toString(36).replace(/[^a-z]+/g, '') + '"); }';
         else if (type == "[Color]")
             return ['"' + Color.random() + '"', '"' + Color.random() + '"'];
     }
@@ -332,18 +359,6 @@ function stopRunning() {
     // clear any event listeners that were bound
     clearEventListeners();
 }
-
-/**
- * Copy contents of code sample to editor.
- */
-function copyToEditor() {
-    // Set value of editor to example
-    let editor = document.querySelector('.CodeMirror').CodeMirror;
-    editor.setValue($(".tab-pane.active > code").text());
-
-    // Close modal
-    $(".modal").modal("hide");
-}            
 
 /**
  * Execute user's code.

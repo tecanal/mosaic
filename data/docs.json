@@ -102,6 +102,59 @@
                             "type": "Integer"
                         }
                     ]
+                },
+                {
+                    "name": "setTileBorderColor",
+                    "description": "Sets a tile's on click function.",
+                    "isStatic": false,
+                    "parameters": [ 
+                        { 
+                            "name": "x", 
+                            "type": "Integer"
+                        }, 
+                        {
+                            "name": "y", 
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "func",
+                            "type": "Function"
+                        }
+                    ]
+                },
+                {
+                    "name": "setTileOnMouseOver",
+                    "description": "Sets a tile's on mouse over function.",
+                    "isStatic": false,
+                    "parameters": [ 
+                        { 
+                            "name": "x", 
+                            "type": "Integer"
+                        }, 
+                        {
+                            "name": "y", 
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "func",
+                            "type": "Function"
+                        }
+                    ]
+                },
+                {
+                    "name": "loop",
+                    "description": "Sets a tile's on mouse over function.",
+                    "isStatic": true,
+                    "parameters": [
+                        {
+                            "name": "func",
+                            "type": "Function"
+                        },
+                        {
+                            "name": "interval",
+                            "type": "Integer"
+                        }
+                    ]
                 }
             ]
         },

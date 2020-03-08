@@ -309,9 +309,8 @@ class Mosaic {
             let tableRow = table.insertRow(i);
             let arrayRow = [];
 
-            for (let j = 0; j < width; j++)  {
+            for (let j = 0; j < width; j++)  
                 arrayRow.push(new Tile(tableRow.insertCell(j)));
-            } 
 
             this._tiles.push(arrayRow);
         }

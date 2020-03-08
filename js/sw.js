@@ -1,8 +1,9 @@
-const CACHE_NAME = "v2.4.1";
+const CACHE_NAME = "v2.5.0";
 const URLS_TO_CACHE = [
     "../index.html",
 
     "../data/docs.json",
+    "../data/examples.json",
     "../data/lessons.json",
     
     "../codemirror/codemirror.css",

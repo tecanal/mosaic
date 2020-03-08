@@ -148,6 +148,8 @@ td { padding: 20px; }
             
 #console { width: 100%; background: white; box-sizing: border-box; padding: 10px; border: 1px solid gray; height: 30%; overflow-y: scroll; }
 
+#examples p:first-child { margin-top: 0; }
+
 /* https://codepen.io/jpost-design/pen/EKZLzK */
 @keyframes glowing {
     0% { box-shadow: 0 0 -10px #c4a300; }

@@ -272,7 +272,6 @@ function openModal(content) {
     // hide all modal content possibilites
     for (const el of document.getElementsByClassName("modalContent"))
         el.style.display = "none";
-    document.getElementById("learningPath").style.display = "none";
 
     let title;
     if (content == "lessons")  {

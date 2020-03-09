@@ -1,4 +1,4 @@
-const CACHE_NAME = "v2.5.0";
+const CACHE_NAME = "v2.5.1";
 const URLS_TO_CACHE = [
     "../index.html",
 

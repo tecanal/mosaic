@@ -295,24 +295,25 @@ class Tile {
  */
 class Mosaic {
     constructor(width, height) {
-        // Set the height and width
+        // set the height and width
         this._height = height;
-        this._width = width;
+        this._width  = width;
 
-        // Clear any leftover table HTML
+        // clear any leftover table HTML
         table.innerHTML = "";
 
-        this._tiles = [];
+        // create grid without tiles
+        this._tiles = [...Array(this._width)].map(x => Array(this._height));
 
-        // Create table with height and width parameters
-        for (let i = 0; i < height; i++) {
-            let tableRow = table.insertRow(i);
-            let arrayRow = [];
+        // create table with height and width parameters
+        for (let y = 0; y < this._height; y++) {
+            let tableRow = table.insertRow(y);
 
-            for (let j = 0; j < width; j++)  
-                arrayRow.push(new Tile(tableRow.insertCell(j)));
+            for (let x = 0; x < this._width; x++)  {
+                let tile = new Tile(tableRow.insertCell(x));
 
-            this._tiles.push(arrayRow);
+                this._tiles[x][this._height - 1 - y] = tile;
+            }
         }
     };
                 
@@ -320,14 +321,14 @@ class Mosaic {
      * Set the height of the Mosaic object.
      */
     set height(height) {
-        this._height = height;
+        // this._height = height;
     }
 
     /**
      * Get the width of the Mosaic object.
      */
     set width(width) {
-        this._width = width;
+        // this._width = width;
     }
                 
     /**
@@ -355,7 +356,7 @@ class Mosaic {
     getTile(x, y) {
         // bounds checking
         if (x >= 0 && x < this._width && y >= 0 && y < this._height)
-            return this._tiles[this._height - 1 - y][x];
+            return this._tiles[x][y];
     }
                 
     /**
@@ -516,6 +517,9 @@ class Mosaic {
     }
 }
 
+/**
+ * A class that wraps audio-related Web APIs.
+ */
 class Player {
     static setVoice(voice) {
         this.voice = voice;

@@ -232,6 +232,21 @@ class Tile {
         this.cell.style.backgroundImage = '-webkit-linear-gradient(' + colors.join(", ") + ')';
     }
 
+    set backgroundImage(url) {
+        this._backgroundImage = url;
+
+        this.cell.style.background = "url(" + url + ")";
+        this.cell.style.backgroundSize = "cover";
+    }
+
+    get backgroundImage() {
+        return this._backgroundImage;
+    }
+
+    set transform(transform) {
+        this.cell.style.transform = transform;
+    }
+
     setGradient(...colors) {
         this.gradient = colors;
 
@@ -387,12 +402,36 @@ class Mosaic {
     }
 
     /*
-    * Give the pixel a color gradient.
-    */
+     * Give the pixel a color gradient.
+     */
     getTileGradient(x, y) {
         // bounds checking
         if (x >= 0 && x < this._width && y >= 0 && y < this._height)
             return this.getTile(x, y).gradient;
+    }
+
+    /**
+     * Set the background image of the Tile.
+     * @param {Number} x 
+     * @param {Number} y 
+     * @param {String} url 
+     */
+    setTileBackgroundImage(x, y, url) {
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height)
+            this.getTile(x, y).backgroundImage = url;
+    }
+
+    /**
+     * 
+     * @param {Number} x 
+     * @param {Number} y 
+     * @returns {String} url
+     */
+    getTileBackgroundImage(x, y) {
+        // bounds checking
+        if (x >= 0 && x < this._width && y >= 0 && y < this._height)
+            return this.getTile(x, y).backgroundImage;
     }
 
     /**

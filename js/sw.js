@@ -1,4 +1,4 @@
-const CACHE_NAME = "v2.5.2";
+const CACHE_NAME = "v2.6.0";
 const URLS_TO_CACHE = [
     "../index.html",
 
@@ -25,9 +25,11 @@ const URLS_TO_CACHE = [
     "../codemirror/addon/selection/active-line.js",
 
     "./jquery-resizable.min.js",
+    "./jquery-resizable.min.js.map",
     "./jquery.slim.min.js",
 
     "./api.js",
+    "./jeroo.js",
     "./app.js"
 ];
 

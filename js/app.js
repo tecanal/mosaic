@@ -196,6 +196,8 @@ function renderHelp() {
 
         if (api == "Mosaic")
             return "moz";
+        else if (api == "Jeroo")
+            return "jeroo"
         else
             return api;
     }
@@ -212,6 +214,8 @@ function renderHelp() {
             return "function() { console.log(\"" + Math.random().toString(36).replace(/[^a-z]+/g, '') + '"); }';
         else if (type == "[Color]")
             return ['"' + Color.random() + '"', '"' + Color.random() + '"'];
+        else if (type == "Direction")
+            return Math.floor(Math.random() * 2) ? '"left"' : '"right"';
     }
 
     fetch("data/docs.json")
@@ -230,7 +234,12 @@ function renderHelp() {
 
                 // reconstruct what the function header is, and what a function call would look like
                 const functionHeader = func.name + "(" + params.join(", ") + ")";
-                const functionCall = getObjectForCall(api.name, func.isStatic) + "." + func.name + "(" + args.join(", ") + ");";
+
+                let functionCall;
+                if (func.isConstructor)
+                    functionCall = "new " + api.name + "(" + args.join(", ") + ");";
+                else
+                    functionCall = getObjectForCall(api.name, func.isStatic) + "." + func.name + "(" + args.join(", ") + ");";
 
                 const blocks = [
                     {

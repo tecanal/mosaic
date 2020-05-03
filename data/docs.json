@@ -4,6 +4,22 @@
             "name": "Mosaic",
             "functions": [
                 {
+                    "name": "Mosaic",
+                    "description": "Create a Mosaic object of defined width and height.",
+                    "isConstructor": true,
+                    "isStatic": false,
+                    "parameters": [
+                        {
+                            "name": "width",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "height",
+                            "type": "Integer"
+                        }
+                    ]
+                },
+                {
                     "name": "setTileColor",
                     "description": "Sets a tile's color.",
                     "notes": "You can set colors with HTML colors, hex, rgb(), or rgba() formats.",
@@ -224,6 +240,58 @@
                         { 
                             "name": "toSpeak", 
                             "type": "String"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Jeroo",
+            "functions": [
+                {
+                    "name": "Jeroo",
+                    "description": "Create a Jeroo object at x, y position facing east.",
+                    "isConstructor": true,
+                    "isStatic": false,
+                    "parameters": [
+                        {
+                            "name": "x",
+                            "type": "Integer"
+                        },
+                        {
+                            "name": "y",
+                            "type": "Integer"
+                        }
+                    ]
+                },
+                {
+                    "name": "hop",
+                    "description": "Move forward one space in the direction the Jeroo is facing.",
+                    "isStatic": false,
+                    "parameters": [
+
+                    ]
+                },
+                {
+                    "name": "hop",
+                    "description": "Move forward multiple spaces in the direction the Jeroo is facing.",
+                    "isStatic": false,
+                    "parameters": [
+                        {
+                            "name": "n",
+                            "type": "Integer"
+                        }
+                    ]
+                },
+                {
+                    "name": "turn",
+                    "description": "Change the direction that the Jeroo is facing.",
+                    "notes": "You can only turn left or right",
+                    "isStatic": false,
+                    "parameters": [
+                        {
+                            "name": "direction",
+                            "type": "Direction"
                         }
                     ]
                 }

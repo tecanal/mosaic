@@ -50,7 +50,7 @@ window.onload = () => {
                 let uncommentedLine;
 
                 // if comment has trailing space
-                if (line.match("// ").length) {
+                if (line.substring(0, 3) == "// ") {
                     uncommentedLine = line.replace("// ", "");
                 }
                 else {

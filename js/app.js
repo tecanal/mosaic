@@ -32,17 +32,39 @@ window.onload = () => {
         styleActiveLine: { nonEmpty: true },
         value: "const moz = new Mosaic(5, 5);\n\nmoz.setTileColor(0, 0, 'black');",
         extraKeys: {
-            "Ctrl-/": instance => commentSelection(true),
-            "Cmd-/": instance => commentSelection(true),
+            "Ctrl-/": instance => commentSelection(),
+            "Cmd-/": instance => commentSelection()
         }      
     });
       
-    function commentSelection(isComment) {
-        const getSelectedRange  = () => ({ from: editor.getCursor(true), to: editor.getCursor(false) });
-        
-        const range = getSelectedRange();
+    function commentSelection() {
+        const getSelectedRange = () => ({ from: editor.getCursor(true), to: editor.getCursor(false) });
 
-        editor.commentRange(isComment, range.from, range.to);
+        // iterate through lines within selected range
+        const range = getSelectedRange();
+        for (let i = range.from.line; i <= range.to.line; i++) {
+            const line = editor.getLine(i);
+
+            // if line is already commented
+            if (line.substring(0, 2) == "//") {
+                const uncommentedLine = line.replace("//", "").trim();
+
+                const from = { line: i, ch: 0 };
+                const to   = { line: i, ch: line.length };
+
+                editor.replaceRange(uncommentedLine, from, to);
+            }
+            // if non-blank line that is not commented
+            else if (line.length) {
+                // if line is not empty
+                const commentedLine = "// " + line;
+
+                const from = { line: i, ch: 0 };
+                const to   = { line: i, ch: line.length };
+
+                editor.replaceRange(commentedLine, from, to);
+            }
+        }
     }
 
     // autofocus on editor input

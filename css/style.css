@@ -44,6 +44,26 @@ a.disabled:hover { color: white; cursor: default; }
     font-size: 1rem; 
 }
 
+@media only screen and (min-height: 768px) {
+    .nav {  overflow: hidden; background-color: #3954AE; height: 5vh; }
+
+    .nav a { 
+        float: left; 
+        display: block; 
+        color: #f2f2f2; 
+        text-align: center; 
+        padding-top: 2vh;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-bottom: 2vh;
+        text-decoration: none; 
+    }
+
+    #runCode, #stopRunning {
+        padding-top: 2vh;
+    }
+}
+
 .panel-container { display: flex; flex-direction: row; overflow: hidden; height: 92vh; padding: 0; margin: 0; }
 
 .panel-left { flex: 0 0 auto; width: 50%; white-space: nowrap; background: #838383; color: #fff; }

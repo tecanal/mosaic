@@ -2,6 +2,8 @@ class Jeroo {
     constructor(x, y) {
         // create game board
         this.mosaic = new Mosaic(15, 15);
+
+        this.islandMap = {};
 		
         // create Jeroo if in bounds
         if (this.isInBounds(x, y)) {
@@ -13,12 +15,23 @@ class Jeroo {
         // show the map
         this.paintMap();
     }
-	
+    
+    /**
+     * Check if a coordinate is within the boundary of the map.
+     * @param {Number} x 
+     * @param {Number} y 
+     * @returns {Boolean} inBounds
+     */
     isInBounds(x, y) {
         return x >= 0 && x <= this.mosaic.width - 1 
                 && y >= 0 && y <= this.mosaic.height - 1;
     }
-	
+    
+    /**
+     * Hop implicitly once if no arguments or hop n times if one argument.
+     * Do nothing if more than one argument.
+     * @param  {...Number} args 
+     */
     hop(...args) {
         const NORTH = 360;
         const SOUTH = 180;
@@ -96,6 +109,20 @@ class Jeroo {
 		
         this.paintPlayer();
     }
+
+    /**
+     * Loads a map file with the name provided from the maps folder.
+     * @param {String} name 
+     */
+    loadMap(name) {
+        fetch("data/maps/" + name + ".json")
+        .then(response => response.text())
+        .then(data => {
+            this.islandMap = JSON.parse(data);
+
+            this.paintMap();
+        });
+    }
 	
     paintPlayer() {
         const PLAYER_IMG_URL = "https://clipartart.com/images/arrow-clipart-going-up-4.png";
@@ -110,6 +137,7 @@ class Jeroo {
 	
     paintMap() {
         const GRASS_COLOR = "#19A23A";
+        const FLOWER_IMG = "https://www.pinclipart.com/picdir/middle/107-1079582_yellow-flower-clipart-clip-art-yellow-flower-png.png";
 		
         // clear the mosaic
         this.mosaic.clear();
@@ -120,8 +148,13 @@ class Jeroo {
                 this.mosaic.setTileColor(x, y, GRASS_COLOR);
             }
         }
-		
+
         // paint flowers
+        if (this.islandMap.flowers) {
+            for (const flower of this.islandMap.flowers) {
+                this.mosaic.setTileBackgroundImage(flower.x, flower.y, FLOWER_IMG);
+            }
+        }
 		
         // paint nets
 		

@@ -44,7 +44,7 @@ a.disabled:hover { color: white; cursor: default; }
     font-size: 1rem; 
 }
 
-@media only screen and (min-height: 768px) {
+@media only screen and (min-height: 1000px) {
     .nav {  overflow: hidden; background-color: #3954AE; height: 5vh; }
 
     .nav a { 

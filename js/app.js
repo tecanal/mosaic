@@ -47,7 +47,15 @@ window.onload = () => {
 
             // if line is already commented
             if (line.substring(0, 2) == "//") {
-                const uncommentedLine = line.replace("//", "").trim();
+                let uncommentedLine;
+
+                // if comment has trailing space
+                if (line.match("// ").length) {
+                    uncommentedLine = line.replace("// ", "");
+                }
+                else {
+                    uncommentedLine = line.replace("//", "");
+                }
 
                 const from = { line: i, ch: 0 };
                 const to   = { line: i, ch: line.length };
@@ -56,7 +64,6 @@ window.onload = () => {
             }
             // if non-blank line that is not commented
             else if (line.length) {
-                // if line is not empty
                 const commentedLine = "// " + line;
 
                 const from = { line: i, ch: 0 };

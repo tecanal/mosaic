@@ -4,14 +4,21 @@ const EAST = 90;
 const WEST = 270;
 
 class Jeroo {
+    /**
+     * Create a Jeroo at position x, y facing east.
+     * @param {Number} x 
+     * @param {Number} y 
+     */
     constructor(x, y) {
         // create Jeroo if in bounds
         if (this.isInBounds(x, y)) {
+            // instantiate Jeroo object properties
             this._x = x;
             this._y = y;
-            this._direction = 90;
+            this._direction = EAST;
             this._pouchFlowers = 0;
 
+            // keep track of extant Jeroo instances
             Jeroo.prototype.instances.push(this);
 
             // show the map
@@ -19,26 +26,41 @@ class Jeroo {
         }
     }
 
+    /**
+     * The getter for x coordinate.
+     */
     get x() {
         return this._x;
     }
 
+    /**
+     * The getter for y coordinate.
+     */
     get y() {
         return this._y;
     }
     
+    /**
+     * The getter for direction Jeroo is facing.
+     */
     get direction() {
         return this._direction;
     }
 
+    /**
+     * The getter for the number of flowers in the Jeroo's pouch.
+     */
     get pouchFlowers() {
         return this._pouchFlowers;
     }
 
+    /**
+     * The setter for the number of flowers in the Jeroo's pouch.
+     */
     set pouchFlowers(x) {
         this._pouchFlowers += x;
     }
-    
+
     /**
     * Check if a coordinate is within the boundary of the map.
     * @param {Number} x 
@@ -50,6 +72,12 @@ class Jeroo {
                 && y >= 0 && y <= Jeroo.prototype.mosaic.height - 1;
     }
 
+    /**
+     * Check if the Jeroo can move to a given coordinate, or if it is blocked by an obstacle.
+     * @param {Number} x 
+     * @param {Number} y 
+     * @returns {Boolean} canMoveTo
+     */
     canMoveTo(x, y) {
         // check if there is already a Jeroo at that position
         let jeroo = [];
@@ -102,15 +130,6 @@ class Jeroo {
             axis = 1;
             delta = -1;
         }
-		
-        // // if numHops was passed as argument
-        // if (args.length) {
-        //     delta *= args[0];
-        // }
-        // // if no hops defined, implicitly hop 1
-        // else {
-        //     delta *= 1;
-        // }
 
         // if moving along y axis, change y by delta
         if (axis) {
@@ -120,6 +139,9 @@ class Jeroo {
 				
                 this._y += delta;
             }
+            else {
+                return;
+            }
         }
         // if moving along x axis, change x by delta
         else {
@@ -128,6 +150,9 @@ class Jeroo {
                 Jeroo.prototype.mosaic.tiles[this._x][this._y].transform = "";
 				
                 this._x += delta;
+            }
+            else {
+                return;
             }
         }
 		
@@ -202,6 +227,7 @@ class Jeroo {
     * Toss a flower from the Jeroo's pouch in order to disarm a net.
     */
     toss() {
+        // if Jeroo has flower in pouch to toss
         if (this._pouchFlowers > 0) {
             // if there are nets to search through
             if (Jeroo.prototype.islandMap.nets) {
@@ -251,7 +277,11 @@ class Jeroo {
         Jeroo.prototype.paintMap();
     }
 
+    /**
+     * Give another Jeroo a flower from your pouch.
+     */
     give() {
+        // if Jeroo has flowers in pouch to give
         if (this._pouchFlowers > 0) {
             // x or y axis and in what direction
             let axis = 0;
@@ -294,6 +324,346 @@ class Jeroo {
     }
 
     /**
+     * Checks whether this Jeroo has flowers or not.
+     */
+    hasFlowers() {
+        return this._pouchFlowers > 0;
+    }
+
+    /**
+     * Check if there are no nets, flowers, water, or Jeroos in the relative direction of the Jeroo.
+     * @param {String} relativeDirection 
+     */
+    isClear(relativeDirection) {
+        let direction;
+
+        if (relativeDirection.toLowerCase() == "left") {
+            direction = this._direction - 90;
+        }
+        else if (relativeDirection.toLowerCase() == "right") {
+            direction = this._direction + 90;
+        }
+        else if (relativeDirection.toLowerCase() == "ahead") {
+            direction = this._direction;
+        }
+
+        // normalize values to keep in 90-360 range
+        if (direction <= 0)
+            direction += 360;
+        else if (direction > 360)
+            direction -= 360;
+
+        // x or y axis and in what direction
+        let axis = 0;
+        let delta = 0;
+
+        if (direction == EAST) {
+            axis = 0;
+            delta = 1;
+        }
+        else if (direction == WEST) {
+            axis = 0;
+            delta = -1;
+        }
+        else if (direction == NORTH) {
+            axis = 1;
+            delta = 1;
+        }
+        else if (direction == SOUTH) {
+            axis = 1;
+            delta = -1;
+        }
+
+        if (axis) {
+            // find the flower from map at Jeroo relative position
+            const flower = Jeroo.prototype.islandMap.flowers.filter(obj => obj.x == this._x && obj.y == this._y + delta);
+
+            return this.canMoveTo(this._x, this._y + delta) && flower.length === 0;
+        }
+        // if checking along x axis, change x by delta
+        else {
+            // find the flower from map at Jeroo relative position
+            const flower = Jeroo.prototype.islandMap.flowers.filter(obj => obj.x == this._x + delta && obj.y == this._y);
+
+            return this.canMoveTo(this._x + delta, this._y) && flower.length === 0;
+        }
+    }
+
+    /**
+     * Check if the Jeroo is facing the cardinal direction that is passed in.
+     * @param {String} direction 
+     */
+    isFacing(direction) {
+        if (direction.toLowerCase() == "north")
+            return this._direction == NORTH;
+        else if (direction.toLowerCase() == "south")
+            return this._direction == SOUTH;
+        else if (direction.toLowerCase() == "east")
+            return this._direction == EAST;
+        else if (direction.toLowerCase() == "west")
+            return this._direction == WEST;
+    }
+
+    /**
+     * Check if the Jeroo is next to the flower in the cardinal direction that is passed in.
+     * @param {String} relativeDirection 
+     */
+    isFlower(relativeDirection) {
+        // if there are flowers on the map to pick
+        if (Jeroo.prototype.islandMap.flowers) {
+            let flower = [];
+
+            if (relativeDirection.toLowerCase() == "here") {
+                // find the flower from map at Jeroo current position
+                flower = Jeroo.prototype.islandMap.flowers.filter(obj => obj.x == this._x && obj.y == this._y);
+
+                if (flower.length) return true;
+            }
+
+            let direction;
+
+            if (relativeDirection.toLowerCase() == "left") {
+                direction = this._direction - 90;
+            }
+            else if (relativeDirection.toLowerCase() == "right") {
+                direction = this._direction + 90;
+            }
+            else if (relativeDirection.toLowerCase() == "ahead") {
+                direction = this._direction;
+            }
+
+            // normalize values to keep in 90-360 range
+            if (direction <= 0)
+                direction += 360;
+            else if (direction > 360)
+                direction -= 360;
+
+            // x or y axis and in what direction
+            let axis = 0;
+            let delta = 0;
+
+            if (direction == EAST) {
+                axis = 0;
+                delta = 1;
+            }
+            else if (direction == WEST) {
+                axis = 0;
+                delta = -1;
+            }
+            else if (direction == NORTH) {
+                axis = 1;
+                delta = 1;
+            }
+            else if (direction == SOUTH) {
+                axis = 1;
+                delta = -1;
+            }
+
+            if (axis) {
+                // find the flower from map at Jeroo relative position
+                const flower = Jeroo.prototype.islandMap.flowers.filter(obj => obj.x == this._x && obj.y == this._y + delta);
+
+                return flower.length == 1;
+            }
+            // if checking along x axis, change x by delta
+            else {
+                // find the flower from map at Jeroo relative position
+                const flower = Jeroo.prototype.islandMap.flowers.filter(obj => obj.x == this._x + delta && obj.y == this._y);
+
+                return flower.length == 1;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if there is Jeroo in the relative direction that is passed in.
+     * @param {String} relativeDirection 
+     */
+    isJeroo(relativeDirection) {
+        let direction;
+
+        if (relativeDirection.toLowerCase() == "left") {
+            direction = this._direction - 90;
+        }
+        else if (relativeDirection.toLowerCase() == "right") {
+            direction = this._direction + 90;
+        }
+        else if (relativeDirection.toLowerCase() == "ahead") {
+            direction = this._direction;
+        }
+
+        // normalize values to keep in 90-360 range
+        if (direction <= 0)
+            direction += 360;
+        else if (direction > 360)
+            direction -= 360;
+
+        // x or y axis and in what direction
+        let axis = 0;
+        let delta = 0;
+
+        if (direction == EAST) {
+            axis = 0;
+            delta = 1;
+        }
+        else if (direction == WEST) {
+            axis = 0;
+            delta = -1;
+        }
+        else if (direction == NORTH) {
+            axis = 1;
+            delta = 1;
+        }
+        else if (direction == SOUTH) {
+            axis = 1;
+            delta = -1;
+        }
+            
+        // if checking along y axis, change y by delta
+        let jeroo = [];
+        if (axis) {
+            jeroo = Jeroo.prototype.instances.filter(obj => obj.x == this._x && obj.y == this._y + delta);
+        }
+        // if checking along x axis, change x by delta
+        else {
+            jeroo = Jeroo.prototype.instances.filter(obj => obj.x == this._x + delta && obj.y == this._y);
+        }
+
+        // if net in tossing direction
+        if (jeroo.length) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if there is a net in the relative direction that is passed in.
+     * @param {String} relativeDirection 
+     */
+    isNet(relativeDirection) {
+        if (!Jeroo.prototype.islandMap.nets) return;
+
+        let direction;
+
+        if (relativeDirection.toLowerCase() == "left") {
+            direction = this._direction - 90;
+        }
+        else if (relativeDirection.toLowerCase() == "right") {
+            direction = this._direction + 90;
+        }
+        else if (relativeDirection.toLowerCase() == "ahead") {
+            direction = this._direction;
+        }
+
+        // normalize values to keep in 90-360 range
+        if (direction <= 0)
+            direction += 360;
+        else if (direction > 360)
+            direction -= 360;
+
+        // x or y axis and in what direction
+        let axis = 0;
+        let delta = 0;
+
+        if (direction == EAST) {
+            axis = 0;
+            delta = 1;
+        }
+        else if (direction == WEST) {
+            axis = 0;
+            delta = -1;
+        }
+        else if (direction == NORTH) {
+            axis = 1;
+            delta = 1;
+        }
+        else if (direction == SOUTH) {
+            axis = 1;
+            delta = -1;
+        }
+            
+        // if checking along y axis, change y by delta
+        let net = [];
+        if (axis) {
+            net = Jeroo.prototype.islandMap.nets.filter(obj => obj.x == this._x && obj.y == this._y + delta);
+        }
+        // if checking along x axis, change x by delta
+        else {
+            net = Jeroo.prototype.islandMap.nets.filter(obj => obj.x == this._x + delta && obj.y == this._y);
+        }
+
+        // if net in tossing direction
+        if (net.length) {
+            return true;
+        }
+
+        return false;
+    }
+
+    isWater(relativeDirection) {
+        if (!Jeroo.prototype.islandMap.water) return;
+
+        let direction;
+
+        if (relativeDirection.toLowerCase() == "left") {
+            direction = this._direction - 90;
+        }
+        else if (relativeDirection.toLowerCase() == "right") {
+            direction = this._direction + 90;
+        }
+        else if (relativeDirection.toLowerCase() == "ahead") {
+            direction = this._direction;
+        }
+
+        // normalize values to keep in 90-360 range
+        if (direction <= 0)
+            direction += 360;
+        else if (direction > 360)
+            direction -= 360;
+
+        // x or y axis and in what direction
+        let axis = 0;
+        let delta = 0;
+
+        if (direction == EAST) {
+            axis = 0;
+            delta = 1;
+        }
+        else if (direction == WEST) {
+            axis = 0;
+            delta = -1;
+        }
+        else if (direction == NORTH) {
+            axis = 1;
+            delta = 1;
+        }
+        else if (direction == SOUTH) {
+            axis = 1;
+            delta = -1;
+        }
+            
+        // if checking along y axis, change y by delta
+        let water = [];
+        if (axis) {
+            water = Jeroo.prototype.islandMap.water.filter(obj => obj.x == this._x && obj.y == this._y + delta);
+        }
+        // if checking along x axis, change x by delta
+        else {
+            water = Jeroo.prototype.islandMap.water.filter(obj => obj.x == this._x + delta && obj.y == this._y);
+        }
+
+        // if net in tossing direction
+        if (water.length) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
     * Loads a map file with the name provided from the maps folder.
     * @param {String} name 
     */
@@ -310,6 +680,7 @@ class Jeroo {
     }
 }
 
+// create shared Jeroo class state properties and map rendering function
 Jeroo.prototype.islandMap = {};
 Jeroo.prototype.instances = [];
 Jeroo.prototype.mosaic = new Mosaic(15, 15);

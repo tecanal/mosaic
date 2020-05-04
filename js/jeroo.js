@@ -6,24 +6,130 @@ const WEST = 270;
 class Jeroo {
     /**
      * Create a Jeroo at position x, y facing east.
-     * @param {Number} x 
-     * @param {Number} y 
+     * @param {...any} args
      */
-    constructor(x, y) {
-        // create Jeroo if in bounds
-        if (this.isInBounds(x, y)) {
+    constructor(...args) {
+        let x, y, direction, pouchFlowers;
+
+        if (args.length === 0) {
             // instantiate Jeroo object properties
-            this._x = x;
-            this._y = y;
-            this._direction = EAST;
-            this._pouchFlowers = 0;
-
-            // keep track of extant Jeroo instances
-            Jeroo.prototype.instances.push(this);
-
-            // show the map
-            Jeroo.prototype.paintMap();
+            x = 0;
+            y = 0;
+            direction = EAST;
+            pouchFlowers = 0;
         }
+        else if (args.length == 1) {
+            const numFlowers = args[0];
+
+            // if number of flowers is not a number, invalid
+            if (isNaN(numFlowers)) return;
+
+            x = 0;
+            y = 0;
+            direction = EAST;
+            pouchFlowers = numFlowers;
+        }
+        // if given x, y
+        else if (args.length == 2 || args.length == 3) {
+            const potentialX = args[0];
+            const potentialY = args[1];
+
+            // if x or y is not a number, invalid
+            if (isNaN(potentialX) || isNaN(potentialY)) return;
+
+            // create Jeroo if in bounds
+            if (this.isInBounds(potentialX, potentialY)) {
+                // instantiate Jeroo object properties
+                x = potentialX;
+                y = potentialX;
+                direction = EAST;
+                pouchFlowers = 0;
+
+                if (args.length == 3) {
+                    // if is string, is cardinalDirection
+                    if (isNaN(args[2])) {
+                        let cardinalDirection = args[2];
+
+                        if (cardinalDirection.toLowerCase() == "north")
+                            direction = NORTH;
+                        else if (cardinalDirection.toLowerCase() == "south")
+                            direction = SOUTH;
+                        else if (cardinalDirection.toLowerCase() == "east")
+                            direction = EAST;
+                        else if (cardinalDirection.toLowerCase() == "west")
+                            direction = WEST;
+                        else
+                            return;
+
+                        pouchFlowers = 0;
+                    }
+                    // if is number, is numFlowers
+                    else {
+                        direction = EAST;
+                        pouchFlowers = args[2];
+                    }
+                }
+            }
+            // invalid coordinates, do not create Jeroo
+            else {
+                return;
+            }
+        }
+        else if (args.length == 4) {
+            const potentialX = args[0];
+            const potentialY = args[1];
+
+            // if x or y is not a number, invalid
+            if (isNaN(potentialX) || isNaN(potentialY)) return;
+
+            // create Jeroo if in bounds
+            if (this.isInBounds(potentialX, potentialY)) {
+                // instantiate Jeroo object properties
+                x = potentialX;
+                y = potentialX;
+                direction = EAST;
+                pouchFlowers = 0;
+                
+                // if the third argument is a number, invalid
+                if (!isNaN(args[2])) return;
+
+                let cardinalDirection = args[2];
+
+                if (cardinalDirection.toLowerCase() == "north")
+                    direction = NORTH;
+                else if (cardinalDirection.toLowerCase() == "south")
+                    direction = SOUTH;
+                else if (cardinalDirection.toLowerCase() == "east")
+                    direction = EAST;
+                else if (cardinalDirection.toLowerCase() == "west")
+                    direction = WEST;
+                else
+                    return;
+
+                // if the fourth argument is a string, invalid
+                if (isNaN(args[3])) return;
+
+                pouchFlowers = args[3];
+            }
+            else {
+                return;
+            }
+        }
+        else {
+            return;
+        }
+        
+        // set Jeroo properties
+        this._x = x;
+        this._y = y;
+        this._direction = direction;
+        this._pouchFlowers = pouchFlowers;
+
+        // keep track of extant Jeroo instances
+        Jeroo.prototype.instances.push(this);
+
+        // show the map
+        Jeroo.prototype.paintMap();
     }
 
     /**

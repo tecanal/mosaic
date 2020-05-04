@@ -7,7 +7,6 @@
                     "name": "Mosaic",
                     "description": "Create a Mosaic object of defined width and height.",
                     "isConstructor": true,
-                    "isStatic": false,
                     "parameters": [
                         {
                             "name": "width",
@@ -23,7 +22,6 @@
                     "name": "setTileColor",
                     "description": "Sets a tile's color.",
                     "notes": "You can set colors with HTML colors, hex, rgb(), or rgba() formats.",
-                    "isStatic": false,
                     "parameters": [ 
                         { 
                             "name": "x", 
@@ -41,7 +39,6 @@
                 {
                     "name": "getTileColor",
                     "description": "Gets a tile's color.",
-                    "isStatic": false,
                     "parameters": [ 
                         { 
                             "name": "x", 
@@ -56,7 +53,6 @@
                     "name": "setTileGradient",
                     "description": "Sets a tile's gradient.",
                     "notes": "You can pass arguments as an array, or list of arguments.",
-                    "isStatic": false,
                     "parameters": [ 
                         { 
                             "name": "x", 
@@ -74,7 +70,6 @@
                 {
                     "name": "getTileGradient",
                     "description": "Gets a tile's gradient.",
-                    "isStatic": false,
                     "parameters": [ 
                         { 
                             "name": "x", 
@@ -88,7 +83,6 @@
                 {
                     "name": "setTileBorderColor",
                     "description": "Sets a tile's border color.",
-                    "isStatic": false,
                     "parameters": [ 
                         { 
                             "name": "x", 
@@ -122,7 +116,6 @@
                 {
                     "name": "setTileBorderColor",
                     "description": "Sets a tile's on click function.",
-                    "isStatic": false,
                     "parameters": [ 
                         { 
                             "name": "x", 
@@ -141,7 +134,6 @@
                 {
                     "name": "setTileOnMouseOver",
                     "description": "Sets a tile's on mouse over function.",
-                    "isStatic": false,
                     "parameters": [ 
                         { 
                             "name": "x", 
@@ -250,9 +242,14 @@
             "functions": [
                 {
                     "name": "Jeroo",
-                    "description": "Create a Jeroo object at x, y position facing east.",
+                    "description": "Create a Jeroo object at (0, 0) position facing east.",
                     "isConstructor": true,
-                    "isStatic": false,
+                    "parameters": []
+                },
+                {
+                    "name": "Jeroo",
+                    "description": "Create a Jeroo object at (x, y) position facing east.",
+                    "isConstructor": true,
                     "parameters": [
                         {
                             "name": "x",
@@ -265,17 +262,24 @@
                     ]
                 },
                 {
-                    "name": "hop",
-                    "description": "Move forward one space in the direction the Jeroo is facing.",
-                    "isStatic": false,
+                    "name": "loadMap",
+                    "description": "Load a map file.",
+                    "isAsync": true,
                     "parameters": [
-
+                        {
+                            "name": "mapName",
+                            "type": "String"
+                        }
                     ]
                 },
                 {
                     "name": "hop",
+                    "description": "Move forward one space in the direction the Jeroo is facing.",
+                    "parameters": []
+                },
+                {
+                    "name": "hop",
                     "description": "Move forward multiple spaces in the direction the Jeroo is facing.",
-                    "isStatic": false,
                     "parameters": [
                         {
                             "name": "n",
@@ -286,14 +290,116 @@
                 {
                     "name": "turn",
                     "description": "Change the direction that the Jeroo is facing.",
-                    "notes": "You can only turn left or right",
-                    "isStatic": false,
+                    "notes": "You can only turn left or right.",
                     "parameters": [
                         {
                             "name": "direction",
                             "type": "Direction"
                         }
                     ]
+                },
+                {
+                    "name": "pick",
+                    "description": "Take a flower in front of the Jeroo and put it into the Jeroo's pouch.",
+                    "parameters": []
+                },
+                {
+                    "name": "plant",
+                    "description": "Plant a flower from the Jeroo's pouch in front of them.",
+                    "parameters": []
+                },
+                {
+                    "name": "toss",
+                    "description": "Toss a flower from the Jeroo's pouch in order to disarm a net in front of them.",
+                    "parameters": []
+                },
+                {
+                    "name": "give",
+                    "description": "Transfer a flower from the Jeroo to the Jeroo in front of them.",
+                    "parameters": []
+                },
+                {
+                    "name": "hasFlowers",
+                    "description": "Checks whether this Jeroo has flowers or not.",
+                    "parameters": [],
+                    "returns": {
+                        "type": "Boolean"
+                    }
+                },
+                {
+                    "name": "isClear",
+                    "description": "Check if there are no nets, flowers, water, or Jeroos in the relative direction of the Jeroo.",
+                    "parameters": [
+                        {
+                            "name": "relativeDirection",
+                            "type": "RelativeDirection"
+                        }
+                    ],
+                    "returns": {
+                        "type": "Boolean"
+                    }
+                },
+                {
+                    "name": "isFacing",
+                    "description": "Check if the Jeroo is facing the cardinal direction that is passed in.",
+                    "parameters": [
+                        {
+                            "name": "cardinalDirection",
+                            "type": "CardinalDirection"
+                        }
+                    ]
+                },
+                {
+                    "name": "isFlower",
+                    "description": "Check if there is a flower in the relative direction that is passed in.",
+                    "parameters": [
+                        {
+                            "name": "relativeDirection",
+                            "type": "RelativeDirection"
+                        }
+                    ],
+                    "returns": {
+                        "type": "Boolean"
+                    }
+                },
+                {
+                    "name": "isJeroo",
+                    "description": "Check if there is a Jeroo in the relative direction that is passed in.",
+                    "parameters": [
+                        {
+                            "name": "relativeDirection",
+                            "type": "RelativeDirection"
+                        }
+                    ],
+                    "returns": {
+                        "type": "Boolean"
+                    }
+                },
+                {
+                    "name": "isNet",
+                    "description": "Check if there is a net in the relative direction that is passed in.",
+                    "parameters": [
+                        {
+                            "name": "relativeDirection",
+                            "type": "RelativeDirection"
+                        }
+                    ],
+                    "returns": {
+                        "type": "Boolean"
+                    }
+                },
+                {
+                    "name": "isWater",
+                    "description": "Check if there is water in the relative direction that is passed in.",
+                    "parameters": [
+                        {
+                            "name": "relativeDirection",
+                            "type": "RelativeDirection"
+                        }
+                    ],
+                    "returns": {
+                        "type": "Boolean"
+                    }
                 }
             ]
         }

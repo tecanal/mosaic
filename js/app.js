@@ -252,6 +252,10 @@ function renderHelp() {
             return ['"' + Color.random() + '"', '"' + Color.random() + '"'];
         else if (type == "Direction")
             return Math.floor(Math.random() * 2) ? '"left"' : '"right"';
+        else if (type == "RelativeDirection")
+            return ['"left"', '"right"', '"ahead"'][Math.floor(Math.random() * 3)];
+        else if (type == "CardinalDirection")
+            return ['"north"', '"south"', '"east"', '"west"'][Math.floor(Math.random() * 4)];
     }
 
     fetch("data/docs.json")
@@ -274,19 +278,38 @@ function renderHelp() {
                 let functionCall;
                 if (func.isConstructor)
                     functionCall = "new " + api.name + "(" + args.join(", ") + ");";
+                else if (func.isAsync) {
+                    functionCall = "await " + getObjectForCall(api.name, func.isStatic) + "." + func.name + "(" + args.join(", ") + ");";
+
+                    func.notes = "This function is asynchronous.";
+                }
                 else
                     functionCall = getObjectForCall(api.name, func.isStatic) + "." + func.name + "(" + args.join(", ") + ");";
 
-                const blocks = [
-                    {
-                        type: "p", 
-                        content: "<b>" + functionHeader + "</b>: " + func.description
-                    }, 
-                    { 
-                        type: "code", 
-                        content: functionCall 
-                    }
-                ];
+                let blocks = [];
+                blocks.push({
+                    type: "p", 
+                    content: "<b>" + functionHeader + "</b>: " + func.description
+                });
+
+                if (func.notes) {
+                    blocks.push({
+                        type: "p",
+                        content: "<i>Note: " + func.notes + "</i>"
+                    });
+                }
+
+                if (func.returns) {
+                    blocks.push({
+                        type: "p",
+                        content: "<b>Returns: </b> " + func.returns.type
+                    });
+                }
+                
+                blocks.push({
+                    type: "code", 
+                    content: functionCall 
+                })
 
                 renderBlocks(blocks, apiContainer);
             });

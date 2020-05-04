@@ -550,9 +550,13 @@ class Mosaic {
      * Clear the Mosaic's tile color values.
      */
     clear() {
-        for (let x = 0; x < this._width; x++) 
-            for (let y = 0; y < this._height; y++) 
+        for (let x = 0; x < this._width; x++) {
+            for (let y = 0; y < this._height; y++) {
+                this.getTile(x, y).backgroundImage = "";
+                this.getTile(x, y).transform = "";
                 this.getTile(x, y).color = "#eeeeee";
+            }
+        }
     }
 }
 

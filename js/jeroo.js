@@ -5,38 +5,56 @@ const WEST = 270;
 
 class Jeroo {
     constructor(x, y) {
-        // create game board
-        this.mosaic = new Mosaic(15, 15);
-
-        this.islandMap = {};
-        this._pouchFlowers = 0;
-		
         // create Jeroo if in bounds
         if (this.isInBounds(x, y)) {
             this._x = x;
             this._y = y;
             this._direction = 90;
+            this._pouchFlowers = 0;
+
+            Jeroo.prototype.instances.push(this);
+
+            // show the map
+            Jeroo.prototype.paintMap();
         }
-		
-        // show the map
-        this.paintMap();
+    }
+
+    get x() {
+        return this._x;
+    }
+
+    get y() {
+        return this._y;
+    }
+    
+    get direction() {
+        return this._direction;
+    }
+
+    get pouchFlowers() {
+        return this._pouchFlowers;
+    }
+
+    set pouchFlowers(x) {
+        this._pouchFlowers += x;
     }
     
     /**
-     * Check if a coordinate is within the boundary of the map.
-     * @param {Number} x 
-     * @param {Number} y 
-     * @returns {Boolean} inBounds
-     */
+    * Check if a coordinate is within the boundary of the map.
+    * @param {Number} x 
+    * @param {Number} y 
+    * @returns {Boolean} inBounds
+    */
     isInBounds(x, y) {
-        return x >= 0 && x <= this.mosaic.width - 1 && y >= 0 && y <= this.mosaic.height - 1;
+        return x >= 0 && x <= Jeroo.prototype.mosaic.width - 1 
+                && y >= 0 && y <= Jeroo.prototype.mosaic.height - 1;
     }
     
     /**
-     * Hop implicitly once if no arguments or hop n times if one argument.
-     * Do nothing if more than one argument.
-     * @param  {...Number} args 
-     */
+    * Hop implicitly once if no arguments or hop n times if one argument.
+    * Do nothing if more than one argument.
+    * @param  {...Number} args 
+    */
     hop(...args) {
         // x or y axis movement and how many hops
         let axis  = 0;
@@ -75,7 +93,7 @@ class Jeroo {
         if (axis) {
             if (this.isInBounds(this._x, this._y + delta)) {
                 // clear any rotations on this tile before moving
-                this.mosaic.tiles[this._x][this._y].transform = "";
+                Jeroo.prototype.mosaic.tiles[this._x][this._y].transform = "";
 				
                 this._y += delta;
             }
@@ -84,19 +102,19 @@ class Jeroo {
         else {
             if (this.isInBounds(this._x + delta, this._y)) {
                 // clear any rotations on this tile before moving
-                this.mosaic.tiles[this._x][this._y].transform = "";
+                Jeroo.prototype.mosaic.tiles[this._x][this._y].transform = "";
 				
                 this._x += delta;
             }
         }
 		
-        this.paintMap();
+        Jeroo.prototype.paintMap();
     }
     
     /**
-     * Change the direction that the Jeroo is facing.
-     * @param {String} direction left or right
-     */
+    * Change the direction that the Jeroo is facing.
+    * @param {String} direction left or right
+    */
     turn(direction) {
         if (direction.toLowerCase() == "left") {
             this._direction -= 90;
@@ -111,21 +129,21 @@ class Jeroo {
         else if (this._direction > 360)
             this._direction -= 360;
 		
-        this.paintPlayer();
+        Jeroo.prototype.paintMap();
     }
 
     /**
-     * Take a flower from the map and put it into the Jeroo's pouch.
-     */
+    * Take a flower from the map and put it into the Jeroo's pouch.
+    */
     pick() {
         // if there are flowers on the map to pick
-        if (this.islandMap.flowers) {
+        if (Jeroo.prototype.islandMap.flowers) {
             // find the flower from map at Jeroo current position
-            const flower = this.islandMap.flowers.filter(obj => obj.x == this._x && obj.y == this._y);
+            const flower = Jeroo.prototype.islandMap.flowers.filter(obj => obj.x == this._x && obj.y == this._y);
 
             // if flower is at position, remove it from the island map object
             if (flower.length) {
-                this.islandMap.flowers.splice(this.islandMap.flowers.indexOf(flower), 1);
+                Jeroo.prototype.islandMap.flowers.splice(this.islandMap.flowers.indexOf(flower), 1);
 
                 // keep the flower in your pouch
                 this._pouchFlowers++;
@@ -133,16 +151,16 @@ class Jeroo {
         }
 
         // update the map
-        this.paintMap();
+        Jeroo.prototype.paintMap();
     }
 
     /**
-     * Plant a flower from the Jeroo's pouch onto the map.
-     */
+    * Plant a flower from the Jeroo's pouch onto the map.
+    */
     plant() {
         if (this._pouchFlowers > 0) {
-            if (this.islandMap.flowers) {
-                this.islandMap.flowers.push({ x: this._x, y: this._y });
+            if (Jeroo.prototype.islandMap.flowers) {
+                Jeroo.prototype.islandMap.flowers.push({ x: this._x, y: this._y });
             }
 
             // remove the flower from your pouch
@@ -150,16 +168,16 @@ class Jeroo {
         }
         
         // update the map
-        this.paintMap();
+        Jeroo.prototype.paintMap();
     }
 
     /**
-     * Toss a flower from the Jeroo's pouch in order to disarm a net.
-     */
+    * Toss a flower from the Jeroo's pouch in order to disarm a net.
+    */
     toss() {
         if (this._pouchFlowers > 0) {
             // if there are nets to search through
-            if (this.islandMap.nets) {
+            if (Jeroo.prototype.islandMap.nets) {
                 // x or y axis and in what direction
                 let axis = 0;
                 let delta = 0;
@@ -184,17 +202,17 @@ class Jeroo {
                 // if moving along y axis, change y by delta
                 let net = [];
                 if (axis) {
-                    net = this.islandMap.nets.filter(obj => obj.x == this._x && obj.y == this._y + delta);
+                    net = Jeroo.prototype.islandMap.nets.filter(obj => obj.x == this._x && obj.y == this._y + delta);
                 }
                 // if moving along x axis, change x by delta
                 else {
-                    net = this.islandMap.nets.filter(obj => obj.x == this._x + delta && obj.y == this._y);
+                    net = Jeroo.prototype.islandMap.nets.filter(obj => obj.x == this._x + delta && obj.y == this._y);
                 }
 
                 // if net in tossing direction
                 if (net.length) {
                     // remove the net from map
-                    this.islandMap.nets.splice(this.islandMap.nets.indexOf(net), 1);
+                    Jeroo.prototype.islandMap.nets.splice(Jeroo.prototype.islandMap.nets.indexOf(net), 1);
                 }
             }
 
@@ -203,75 +221,120 @@ class Jeroo {
         }
         
         // update the map
-        this.paintMap();
+        Jeroo.prototype.paintMap();
+    }
+
+    give() {
+        if (this._pouchFlowers > 0) {
+            // x or y axis and in what direction
+            let axis = 0;
+            let delta = 0;
+
+            if (this._direction == EAST) {
+                axis = 0;
+                delta = 1;
+            }
+            else if (this._direction == WEST) {
+                axis = 0;
+                delta = -1;
+            }
+            else if (this._direction == NORTH) {
+                axis = 1;
+                delta = 1;
+            }
+            else if (this._direction == SOUTH) {
+                axis = 1;
+                delta = -1;
+            }
+            
+            // if checking along y axis, change y by delta
+            let jeroo = [];
+            if (axis) {
+                jeroo = Jeroo.prototype.instances.filter(obj => obj.x == this._x && obj.y == this._y + delta);
+            }
+            // if checking along x axis, change x by delta
+            else {
+                jeroo = Jeroo.prototype.instances.filter(obj => obj.x == this._x + delta && obj.y == this._y);
+            }
+
+            // if net in tossing direction
+            if (jeroo.length) {
+                jeroo[0].pouchFlowers++;
+
+                this._pouchFlowers--;
+            }
+        }
     }
 
     /**
-     * Loads a map file with the name provided from the maps folder.
-     * @param {String} name 
-     */
-    async loadMap(name) {
+    * Loads a map file with the name provided from the maps folder.
+    * @param {String} name 
+    */
+    static async loadMap(name) {
         // GET request the map file
         const response = await fetch("data/maps/" + name + ".json");
         const data = await response.text();
 
         // parse the map file and store as JSON object
-        this.islandMap = JSON.parse(data);
+        Jeroo.prototype.islandMap = JSON.parse(data);
 
         // update the map
-        this.paintMap();
+        Jeroo.prototype.paintMap();
     }
-	
-    paintPlayer() {
-        const PLAYER_IMG_URL = "https://clipartart.com/images/arrow-clipart-going-up-4.png";
+}
+
+Jeroo.prototype.islandMap = {};
+Jeroo.prototype.instances = [];
+Jeroo.prototype.mosaic = new Mosaic(15, 15);
+Jeroo.prototype.paintMap = function() {
+    const GRASS_COLOR = "#19A23A";
+    const WATER_COLOR = "blue";
+        
+    const FLOWER_IMG = "https://www.pinclipart.com/picdir/middle/107-1079582_yellow-flower-clipart-clip-art-yellow-flower-png.png";
+    const NET_IMG = "https://us.123rf.com/450wm/lumyaisweet/lumyaisweet1804/lumyaisweet180400068/99746247-stock-vector-black-chrome-steel-grating-seamless-structure-chainlink-isolated-on-white-background-vector-illustra.jpg?ver=6";
+        
+    // clear the mosaic
+    Jeroo.prototype.mosaic.clear();
 		
-        // set the tile image to be the Jeroo sprite
-        this.mosaic.tiles[this._x][this._y].backgroundImage = PLAYER_IMG_URL;
-		
-        // rotate the Jeroo sprite in the direction necessary
-        let heading = this._direction;
-        this.mosaic.tiles[this._x][this._y].transform = "rotate(" + heading + "deg)";
+    // paint the grass
+    for (let x = 0; x < Jeroo.prototype.mosaic.width; x++) {
+        for (let y = 0; y < Jeroo.prototype.mosaic.height; y++) {
+            Jeroo.prototype.mosaic.setTileColor(x, y, GRASS_COLOR);
+        }
     }
-	
-    paintMap() {
-        const GRASS_COLOR = "#19A23A";
-        const WATER_COLOR = "blue";
-        
-        const FLOWER_IMG = "https://www.pinclipart.com/picdir/middle/107-1079582_yellow-flower-clipart-clip-art-yellow-flower-png.png";
-        const NET_IMG = "https://us.123rf.com/450wm/lumyaisweet/lumyaisweet1804/lumyaisweet180400068/99746247-stock-vector-black-chrome-steel-grating-seamless-structure-chainlink-isolated-on-white-background-vector-illustra.jpg?ver=6";
-        
-        // clear the mosaic
-        this.mosaic.clear();
-		
-        // paint the grass
-        for (let x = 0; x < this.mosaic.width; x++) {
-            for (let y = 0; y < this.mosaic.height; y++) {
-                this.mosaic.setTileColor(x, y, GRASS_COLOR);
-            }
-        }
 
-        // paint flowers
-        if (this.islandMap.flowers) {
-            for (const flower of this.islandMap.flowers) {
-                this.mosaic.setTileBackgroundImage(flower.x, flower.y, FLOWER_IMG);
-            }
+    // paint flowers
+    if (Jeroo.prototype.islandMap.flowers) {
+        for (const flower of Jeroo.prototype.islandMap.flowers) {
+            Jeroo.prototype.mosaic.setTileBackgroundImage(flower.x, flower.y, FLOWER_IMG);
         }
+    }
 		
-        // paint nets
-        if (this.islandMap.nets) {
-            for (const net of this.islandMap.nets) {
-                this.mosaic.setTileBackgroundImage(net.x, net.y, NET_IMG);
-            }
+    // paint nets
+    if (Jeroo.prototype.islandMap.nets) {
+        for (const net of Jeroo.prototype.islandMap.nets) {
+            Jeroo.prototype.mosaic.setTileBackgroundImage(net.x, net.y, NET_IMG);
         }
+    }
 
-        // paint water
-        if (this.islandMap.water) {
-            for (const tile of this.islandMap.water) {
-                this.mosaic.setTileColor(tile.x, tile.y, WATER_COLOR);
-            }
+    // paint water
+    if (Jeroo.prototype.islandMap.water) {
+        for (const tile of Jeroo.prototype.islandMap.water) {
+            Jeroo.prototype.mosaic.setTileColor(tile.x, tile.y, WATER_COLOR);
         }
+    }
+
+    // paint the Jeroos
+    if (Jeroo.prototype.instances) {
+        for (const jeroo of Jeroo.prototype.instances) {
+            const PLAYER_IMG_URL = "https://clipartart.com/images/arrow-clipart-going-up-4.png";
 		
-        // paint the player
-        this.paintPlayer();
+            // set the tile image to be the Jeroo sprite
+            Jeroo.prototype.mosaic.tiles[jeroo.x][jeroo.y].backgroundImage = PLAYER_IMG_URL;
+		
+            // rotate the Jeroo sprite in the direction necessary
+            let heading = jeroo.direction;
+            Jeroo.prototype.mosaic.tiles[jeroo.x][jeroo.y].transform = "rotate(" + heading + "deg)";
+        }
     }
 }

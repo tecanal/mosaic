@@ -107,11 +107,7 @@ window.onload = () => {
             clearTimeout(delay);
             delay = setTimeout(executeCode, 300);
 
-            // clear the console log view
-            clearConsole();
-
-            // clear evnet listeners
-            clearEventListeners();
+            resetStates();
 
             // if localStorage is available, save the code
             if (hasLocalStorage)
@@ -127,6 +123,17 @@ window.onload = () => {
     renderLessons();
     renderHelp();
     renderExamples();
+}
+
+function resetStates() {
+    // clear the console log view
+    clearConsole();
+
+    // clear event listeners
+    clearEventListeners();
+
+    // clear Jeroo instances
+    Jeroo.prototype.instances = [];
 }
 
 // listen for escape key press
@@ -367,8 +374,9 @@ function runCode() {
 
     autoRun = true;
 
-    // Run the user's code for the first time
-    clearEventListeners();
+    resetStates();
+
+    // run the user's code for the first time
     executeCode();
 }
 

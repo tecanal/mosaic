@@ -775,14 +775,19 @@ class Jeroo {
     */
     static async loadMap(name) {
         // GET request the map file
-        const response = await fetch("data/maps/" + name + ".json");
-        const data = await response.text();
+        try {
+            const response = await fetch("data/maps/" + name + ".json");
+            const data = await response.text();
 
-        // parse the map file and store as JSON object
-        Jeroo.prototype.islandMap = JSON.parse(data);
+            // parse the map file and store as JSON object
+            Jeroo.prototype.islandMap = JSON.parse(data);
 
-        // update the map
-        Jeroo.prototype.paintMap();
+            // update the map
+            Jeroo.prototype.paintMap();
+        }
+        catch(e) {
+            console.error("Map name not found.");
+        }
     }
 }
 

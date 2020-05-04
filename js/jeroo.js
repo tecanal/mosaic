@@ -49,6 +49,26 @@ class Jeroo {
         return x >= 0 && x <= Jeroo.prototype.mosaic.width - 1 
                 && y >= 0 && y <= Jeroo.prototype.mosaic.height - 1;
     }
+
+    canMoveTo(x, y) {
+        // check if there is already a Jeroo at that position
+        let jeroo = [];
+        jeroo = Jeroo.prototype.instances.filter(obj => obj.x == x && obj.y == y);
+
+        // check if there is a net in the way
+        let nets = [];
+        if (Jeroo.prototype.islandMap.nets) {
+            nets = Jeroo.prototype.islandMap.nets.filter(obj => obj.x == x && obj.y == y);
+        }
+
+        // check if there is water in the way
+        let water = [];
+        if (Jeroo.prototype.islandMap.water) {
+            water = Jeroo.prototype.islandMap.water.filter(obj => obj.x == x && obj.y == y);
+        }
+
+        return this.isInBounds(x, y) && !jeroo.length && !nets.length && !water.length;
+    }
     
     /**
     * Hop implicitly once if no arguments or hop n times if one argument.
@@ -62,6 +82,9 @@ class Jeroo {
 
         // if there is more than one argument, do not do anything
         if (args.length > 1) return;
+
+        // if numHops is zero, stop recursing
+        if (args.length && args[0] === 0) return;
 		
         if (this._direction == EAST) {
             axis = 0;
@@ -80,18 +103,18 @@ class Jeroo {
             delta = -1;
         }
 		
-        // if numHops was passed as argument
-        if (args.length) {
-            delta *= args[0];
-        }
-        // if no hops defined, implicitly hop 1
-        else {
-            delta *= 1;
-        }
-		
+        // // if numHops was passed as argument
+        // if (args.length) {
+        //     delta *= args[0];
+        // }
+        // // if no hops defined, implicitly hop 1
+        // else {
+        //     delta *= 1;
+        // }
+
         // if moving along y axis, change y by delta
         if (axis) {
-            if (this.isInBounds(this._x, this._y + delta)) {
+            if (this.canMoveTo(this._x, this._y + delta)) {
                 // clear any rotations on this tile before moving
                 Jeroo.prototype.mosaic.tiles[this._x][this._y].transform = "";
 				
@@ -100,7 +123,7 @@ class Jeroo {
         }
         // if moving along x axis, change x by delta
         else {
-            if (this.isInBounds(this._x + delta, this._y)) {
+            if (this.canMoveTo(this._x + delta, this._y)) {
                 // clear any rotations on this tile before moving
                 Jeroo.prototype.mosaic.tiles[this._x][this._y].transform = "";
 				
@@ -109,6 +132,10 @@ class Jeroo {
         }
 		
         Jeroo.prototype.paintMap();
+
+        // recurse if have more hops to go
+        if (args.length)
+            this.hop(args[0] - 1);
     }
     
     /**

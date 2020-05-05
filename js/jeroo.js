@@ -41,7 +41,7 @@ class Jeroo {
             if (this.isInBounds(potentialX, potentialY)) {
                 // instantiate Jeroo object properties
                 x = potentialX;
-                y = potentialX;
+                y = potentialY;
                 direction = EAST;
                 pouchFlowers = 0;
 
@@ -86,7 +86,7 @@ class Jeroo {
             if (this.isInBounds(potentialX, potentialY)) {
                 // instantiate Jeroo object properties
                 x = potentialX;
-                y = potentialX;
+                y = potentialY;
                 direction = EAST;
                 pouchFlowers = 0;
                 

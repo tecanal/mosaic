@@ -709,6 +709,10 @@ class Jeroo {
         return false;
     }
 
+    /**
+     * Check if there is water in the relative direction that is passed in.
+     * @param {String} relativeDirection 
+     */
     isWater(relativeDirection) {
         if (!Jeroo.prototype.islandMap.water) return;
 
@@ -845,5 +849,59 @@ Jeroo.prototype.paintMap = function() {
             let heading = jeroo.direction;
             Jeroo.prototype.mosaic.tiles[jeroo.x][jeroo.y].transform = "rotate(" + heading + "deg)";
         }
+    }
+}
+
+let islandEditorTile;
+function setIslandEditorTile(value) {
+    islandEditorTile = value;
+}
+
+function enableIslandEditingMode(enable) {
+    // if user wants to enable island editing mode
+    if (enable) {
+        document.getElementById("island_editor").style.display = "";
+
+        for (let x = 0; x < Jeroo.prototype.mosaic.width; x++) {
+            for (let y = 0; y < Jeroo.prototype.mosaic.height; y++) {
+                // on click create new item in island map
+                Jeroo.prototype.mosaic.setTileOnClick(x, y, () => {
+                    // get all island map obstacles and go through them
+                    const obstacles = Object.values(Jeroo.prototype.islandMap);
+                    obstacles.forEach(arr => {
+                        // find any obstacles at same position as click
+                        const obstacle = arr.filter(item => item.x == x && item.y == y);
+
+                        // if obstacle is found at same position, remove it
+                        if (obstacle.length) {
+                            arr.splice(arr.indexOf(obstacle[0]), 1);
+                        }
+                    });
+
+                    // if obstacles category array is already defined
+                    if (Jeroo.prototype.islandMap[islandEditorTile]) {
+                        Jeroo.prototype.islandMap[islandEditorTile].push({ "x": x, "y": y });
+                    }
+                    // if obstacles category array is undefined
+                    else {
+                        Jeroo.prototype.islandMap[islandEditorTile] = [{ "x": x, "y": y }];
+                    }
+                    
+                    // update map
+                    Jeroo.prototype.paintMap();
+                });
+            }
+        }
+    }
+    else {
+        // remove click listeners
+        for (let x = 0; x < Jeroo.prototype.mosaic.width; x++) {
+            for (let y = 0; y < Jeroo.prototype.mosaic.height; y++) {
+                Jeroo.prototype.mosaic.setTileOnClick(x, y, () => {});
+            }
+        }
+
+        // hide island editor
+        document.getElementById("island_editor").style.display = "none";
     }
 }

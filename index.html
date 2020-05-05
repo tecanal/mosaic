@@ -36,6 +36,17 @@
             <div class="panel-right">
                 <div id="preview">
                     <table id="mosaic"></table>
+
+                    <div id="island_editor" style="display: none; margin-top: 10px">
+                        <input type="radio" id="water" name="tileType" value="water" onclick="setIslandEditorTile(this.value)">
+                        <label for="water">Water</label>
+
+                        <input type="radio" id="net" name="tileType" value="nets" onclick="setIslandEditorTile(this.value)">
+                        <label for="net">Net</label>
+
+                        <input type="radio" id="water" name="tileType" value="flowers" onclick="setIslandEditorTile(this.value)">
+                        <label for="flower">Flower</label>
+                    </div>
                 
                     <p id="console-label">Console (<a href="javascript:clearConsole();">Clear</a>):</p>
 
@@ -61,6 +72,11 @@
 
                     <div class="modalContent" id="about" style="display: none;">
                         <button onclick="exportPage()">Export Page to Application</button>
+
+                        <p>
+                            <input type="checkbox" id="enable" name="enable" onclick="enableIslandEditingMode(this.checked)">
+                            <label for="enable">Enable Jeroo Island Editing Mode</label>
+                        </p>
                     </div>
                 </div>
 

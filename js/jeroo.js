@@ -123,6 +123,11 @@ class Jeroo {
         else {
             return;
         }
+
+        // find if there is another Jeroo at that position
+        if (Jeroo.prototype.instances.find(jeroo => jeroo.x == x && jeroo.y == y)) {
+            throw new Error("You cannot have two Jeroos at the same position.");
+        }
         
         // set Jeroo properties
         this._x = x;
@@ -522,13 +527,11 @@ class Jeroo {
     isFlower(relativeDirection) {
         // if there are flowers on the map to pick
         if (Jeroo.prototype.islandMap.flowers) {
-            let flower = [];
-
             if (relativeDirection.toLowerCase() == "here") {
                 // find the flower from map at Jeroo current position
-                flower = Jeroo.prototype.islandMap.flowers.filter(obj => obj.x == this._x && obj.y == this._y);
+                const flower = Jeroo.prototype.islandMap.flowers.find(obj => obj.x == this._x && obj.y == this._y);
 
-                if (flower.length) return true;
+                if (flower) return true;
             }
 
             let direction;
@@ -789,6 +792,7 @@ class Jeroo {
             const data = await response.text();
 
             // parse the map file and store as JSON object
+            Jeroo.prototype.masterMap = JSON.parse(data);
             Jeroo.prototype.islandMap = JSON.parse(data);
 
             // update the map
@@ -801,10 +805,12 @@ class Jeroo {
 }
 
 // create shared Jeroo class state properties and map rendering function
+Jeroo.prototype.masterMap = {}; // this does not get changed by Jeroo execution only editing
 Jeroo.prototype.islandMap = {};
 Jeroo.prototype.instances = [];
 Jeroo.prototype.mosaic;
-Jeroo.prototype.paintMap = function() {
+Jeroo.prototype.islandEditorTile = "";
+Jeroo.prototype.paintMap = () => {
     const GRASS_COLOR = "#19A23A";
     const WATER_COLOR = "blue";
         
@@ -857,14 +863,12 @@ Jeroo.prototype.paintMap = function() {
     }
 }
 
-let islandEditorTile;
-function setIslandEditorTile(value) {
-    islandEditorTile = value;
-}
-
-function enableIslandEditingMode(enable) {
+Jeroo.prototype.enableIslandEditingMode = enable => {
     // if user wants to enable island editing mode
     if (enable) {
+        if (!Jeroo.prototype.mosaic)
+            Jeroo.prototype.mosaic = new Mosaic(15, 15);
+        
         document.getElementById("island_editor").style.display = "";
 
         for (let x = 0; x < Jeroo.prototype.mosaic.width; x++) {
@@ -872,25 +876,27 @@ function enableIslandEditingMode(enable) {
                 // on click create new item in island map
                 Jeroo.prototype.mosaic.setTileOnClick(x, y, () => {
                     // get all island map obstacles and go through them
-                    const obstacles = Object.values(Jeroo.prototype.islandMap);
+                    const obstacles = Object.values(Jeroo.prototype.masterMap);
                     obstacles.forEach(arr => {
                         // find any obstacles at same position as click
-                        const obstacle = arr.filter(item => item.x == x && item.y == y);
+                        const obstacle = arr.find(item => item.x == x && item.y == y);
 
                         // if obstacle is found at same position, remove it
-                        if (obstacle.length) {
-                            arr.splice(arr.indexOf(obstacle[0]), 1);
+                        if (obstacle) {
+                            arr.splice(arr.indexOf(obstacle), 1);
                         }
                     });
 
                     // if obstacles category array is already defined
-                    if (Jeroo.prototype.islandMap[islandEditorTile]) {
-                        Jeroo.prototype.islandMap[islandEditorTile].push({ "x": x, "y": y });
+                    if (Jeroo.prototype.masterMap[Jeroo.prototype.islandEditorTile]) {
+                        Jeroo.prototype.masterMap[Jeroo.prototype.islandEditorTile].push({ "x": x, "y": y });
                     }
                     // if obstacles category array is undefined
                     else {
-                        Jeroo.prototype.islandMap[islandEditorTile] = [{ "x": x, "y": y }];
+                        Jeroo.prototype.masterMap[Jeroo.prototype.islandEditorTile] = [{ "x": x, "y": y }];
                     }
+
+                    Jeroo.prototype.islandMap = JSON.parse(JSON.stringify(Jeroo.prototype.masterMap));
                     
                     // update map
                     Jeroo.prototype.paintMap();
@@ -909,4 +915,8 @@ function enableIslandEditingMode(enable) {
         // hide island editor
         document.getElementById("island_editor").style.display = "none";
     }
+}
+
+Jeroo.prototype.setIslandEditorTile = value => {
+    Jeroo.prototype.islandEditorTile = value;
 }

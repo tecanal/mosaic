@@ -38,14 +38,17 @@
                     <table id="mosaic"></table>
 
                     <div id="island_editor" style="display: none; margin-top: 10px">
-                        <input type="radio" id="water" name="tileType" value="water" onclick="setIslandEditorTile(this.value)">
+                        <input type="radio" id="water" name="tileType" value="water" onclick="Jeroo.prototype.setIslandEditorTile(this.value)">
                         <label for="water">Water</label>
 
-                        <input type="radio" id="net" name="tileType" value="nets" onclick="setIslandEditorTile(this.value)">
+                        <input type="radio" id="net" name="tileType" value="nets" onclick="Jeroo.prototype.setIslandEditorTile(this.value)">
                         <label for="net">Net</label>
 
-                        <input type="radio" id="water" name="tileType" value="flowers" onclick="setIslandEditorTile(this.value)">
+                        <input type="radio" id="water" name="tileType" value="flowers" onclick="Jeroo.prototype.setIslandEditorTile(this.value)">
                         <label for="flower">Flower</label>
+
+                        <input type="radio" id="water" name="tileType" value="grass" onclick="Jeroo.prototype.setIslandEditorTile(this.value)">
+                        <label for="grass">Grass</label>
                     </div>
                 
                     <p id="console-label">Console (<a href="javascript:clearConsole();">Clear</a>):</p>
@@ -75,7 +78,7 @@
                         <button onclick="shareCode()">Share Code with URL</button>
 
                         <p>
-                            <input type="checkbox" id="enable" name="enable" onclick="enableIslandEditingMode(this.checked)">
+                            <input type="checkbox" id="enable" name="enable" onclick="Jeroo.prototype.enableIslandEditingMode(this.checked)">
                             <label for="enable">Enable Jeroo Island Editing Mode</label>
                         </p>
                     </div>

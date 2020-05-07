@@ -160,6 +160,9 @@ function resetStates() {
 
     // clear Jeroo instances
     Jeroo.prototype.instances = [];
+
+    // copy master map into islandMap working copy
+    Jeroo.prototype.islandMap = JSON.parse(JSON.stringify(Jeroo.prototype.masterMap));
 }
 
 // listen for escape key press

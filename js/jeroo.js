@@ -11,6 +11,11 @@ class Jeroo {
     constructor(...args) {
         let x, y, direction, pouchFlowers;
 
+        // if Jeroo needs to create shared Mosaic
+        if (!Jeroo.prototype.mosaic) {
+            Jeroo.prototype.mosaic = new Mosaic(15, 15);
+        }
+
         if (args.length === 0) {
             // instantiate Jeroo object properties
             x = 0;
@@ -798,7 +803,7 @@ class Jeroo {
 // create shared Jeroo class state properties and map rendering function
 Jeroo.prototype.islandMap = {};
 Jeroo.prototype.instances = [];
-Jeroo.prototype.mosaic = new Mosaic(15, 15);
+Jeroo.prototype.mosaic;
 Jeroo.prototype.paintMap = function() {
     const GRASS_COLOR = "#19A23A";
     const WATER_COLOR = "blue";

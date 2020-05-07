@@ -139,6 +139,10 @@ class Tile {
             document.adoptedStyleSheets = [sheet];
     }
 
+    get cellRef() {
+        return this.cell;
+    }
+
     get borderColor() {
         return this._borderColor;
     }

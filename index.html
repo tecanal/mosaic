@@ -71,7 +71,8 @@
                     <div class="modalContent" id="help" style="display: none;"></div>
 
                     <div class="modalContent" id="about" style="display: none;">
-                        <button onclick="exportPage()">Export Page to Application</button>
+                        <button onclick="exportPage()">Export Code to HTML Page</button>
+                        <button onclick="shareCode()">Share Code with URL</button>
 
                         <p>
                             <input type="checkbox" id="enable" name="enable" onclick="enableIslandEditingMode(this.checked)">
@@ -106,6 +107,8 @@
 
         <script src="js/jquery.slim.min.js"></script>
         <script src="js/jquery-resizable.min.js"></script>
+
+        <script src="js/lzma.js"></script>
 
         <script src="js/api.js"></script>
         <script src="js/jeroo.js"></script>

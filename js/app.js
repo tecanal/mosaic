@@ -1,4 +1,5 @@
 const synth = window.speechSynthesis;
+const my_lzma = new LZMA("js/lzma_worker.js");
 
 let delay;
 let firstRun = true;
@@ -36,7 +37,27 @@ window.onload = () => {
             "Cmd-/": instance => commentSelection()
         }      
     });
-      
+
+    if (window.location.hash) {
+        const hash = window.location.hash;
+        const encodedData = hash.substring(1);
+
+        const rawData = atob(encodedData);
+
+        const rawLength = rawData.length;
+        let array = new Uint8Array(new ArrayBuffer(rawLength));
+
+        for (let i = 0; i < rawLength; i++) {
+            array[i] = rawData.charCodeAt(i);
+        }
+
+        my_lzma.decompress(array, result => {
+            const editor = document.querySelector('.CodeMirror').CodeMirror;
+
+            editor.setValue(result);
+        });
+    }
+
     function commentSelection() {
         const getSelectedRange = () => ({ from: editor.getCursor(true), to: editor.getCursor(false) });
 
@@ -120,11 +141,16 @@ window.onload = () => {
         }
     });
 
+    // render modal text from .json data files
     renderLessons();
     renderHelp();
     renderExamples();
 }
 
+/**
+ * Reset the various states that that need should be done on every run of
+ * new code.
+ */
 function resetStates() {
     // clear the console log view
     clearConsole();
@@ -149,6 +175,42 @@ window.onclick = e => {
     // if clicking outside of modal
     if (e.target == modal) 
         modal.style.display = "none";
+}
+
+/**
+ * Create a URL that can be used to share code.
+ */
+function shareCode() {
+    // get user code from editor
+    const editor = document.querySelector('.CodeMirror').CodeMirror;
+    const code = editor.getValue();
+
+    // compress code with LZMA
+    my_lzma.compress(code, 9, result => {
+        // convert ByteArray into string and base64 encode it
+        const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(result)));
+
+        // get current URL without any hash
+        const url = location.href.replace(location.hash, "");
+
+        // create a textarea element with the share URL
+        const textArea = document.createElement("textarea");
+        textArea.value = url + "#" + base64String;
+
+        // add to body
+        document.body.appendChild(textArea);
+
+        // focus and select text to and copy to clipboard
+        textArea.focus();
+        textArea.select();
+        document.execCommand("copy");
+
+        // cleanup and remove textarea element
+        document.body.removeChild(textArea);
+
+        // let the user know that the text was copied
+        alert("URL copied to clipboard");
+    });
 }
 
 function exportPage() {

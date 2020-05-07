@@ -1,4 +1,4 @@
-const CACHE_NAME = "v2.7.2";
+const CACHE_NAME = "v2.8.0";
 const URLS_TO_CACHE = [
     "../index.html",
 
@@ -27,6 +27,9 @@ const URLS_TO_CACHE = [
     "./jquery-resizable.min.js",
     "./jquery-resizable.min.js.map",
     "./jquery.slim.min.js",
+
+    "./lzma.js",
+    "./lzma_worker.js",
 
     "./api.js",
     "./jeroo.js",

@@ -38,9 +38,9 @@ window.onload = () => {
         }      
     });
 
-    if (window.location.hash) {
+    if (window.location.hash && window.location.hash.indexOf("?") != -1) {
         const hash = window.location.hash;
-        const encodedData = hash.substring(1);
+        const encodedData = hash.substring(2);
 
         const rawData = atob(encodedData);
 
@@ -141,10 +141,15 @@ window.onload = () => {
         }
     });
 
+    document.getElementById("lessonSelector").onchange = function() {
+        if (this.selectedIndex !== 0) {
+            window.location.href = this.value;
+        }
+    }
+
     // render modal text from .json data files
     renderLessons();
     renderHelp();
-    // renderExamples();
     renderTutorials();
 }
 
@@ -227,7 +232,7 @@ function shareCode() {
 
         // create a textarea element with the share URL
         const textArea = document.createElement("textarea");
-        textArea.value = url + "#" + base64String;
+        textArea.value = url + "#?" + base64String;
 
         // add to body
         document.body.appendChild(textArea);
@@ -328,6 +333,8 @@ function renderTutorials() {
  * Convert lessons.json into HTML for the lessons section.
  */
 function renderLessons() {
+    const lessonSelector = document.getElementById("lessonSelector");
+
     fetch("data/lessons.json")
     .then(response => response.json())
     .then(data => {
@@ -340,6 +347,12 @@ function renderLessons() {
 
             // add the lesson to the lessons div
             document.getElementById("lessons").appendChild(lessonContainer);
+
+            const option = document.createElement("option");
+            option.text = lesson.name;
+            option.value = "#" + lessonContainer.id;
+
+            lessonSelector.add(option);
 
             // render the blocks for that lesson
             renderBlocks(lesson.blocks, lessonContainer);

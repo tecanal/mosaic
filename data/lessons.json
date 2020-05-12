@@ -199,6 +199,10 @@
             "name": "Creating Functions",
             "blocks": [
                 {
+                    "type": "h1",
+                    "content": "Creating Functions"
+                },
+                {
                     "type": "p",
                     "content": "As previously written, functions are lines of code that have been grouped together and can be called upon by a name. These functions can take inputs called parameters, and can return outputs."
                 },

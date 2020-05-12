@@ -328,8 +328,8 @@ function renderHelp() {
     .then(data => {
         data.docs.forEach(api => {
             const apiContainer = document.createElement("div");
-            apiContainer.id = api.name.toLowerCase();
-            apiContainer.innerHTML += "<h2>" + api.name + "</h2>";
+            apiContainer.id = api.name;
+            apiContainer.className = "panel";
 
             api.functions.forEach(func => {
                 const params = func.parameters.map(param => param.name);
@@ -340,6 +340,7 @@ function renderHelp() {
                 // reconstruct what the function header is, and what a function call would look like
                 const functionHeader = func.name + "(" + params.join(", ") + ")";
 
+                // handle special function cases
                 let functionCall;
                 if (func.isConstructor)
                     functionCall = "new " + api.name + "(" + args.join(", ") + ");";
@@ -351,12 +352,14 @@ function renderHelp() {
                 else
                     functionCall = getObjectForCall(api.name, func.isStatic) + "." + func.name + "(" + args.join(", ") + ");";
 
+                // add function header and description
                 let blocks = [];
                 blocks.push({
                     type: "p", 
                     content: "<b>" + functionHeader + "</b>: " + func.description
                 });
 
+                // add function notes to blocks if defined
                 if (func.notes) {
                     blocks.push({
                         type: "p",
@@ -364,6 +367,7 @@ function renderHelp() {
                     });
                 }
 
+                // add function returns to blocks if defined
                 if (func.returns) {
                     blocks.push({
                         type: "p",
@@ -371,15 +375,35 @@ function renderHelp() {
                     });
                 }
                 
+                // add code to show how to call the function
                 blocks.push({
                     type: "code", 
                     content: functionCall 
                 })
 
+                // render blocks into HTML
                 renderBlocks(blocks, apiContainer);
             });
             
-        
+            // accordion toggle button
+            const button = document.createElement("button");
+            button.className = "accordion";
+            button.innerText = api.name;
+            button.onclick = () => {
+                button.classList.toggle("active");
+
+                // hide accordion
+                if (apiContainer.style.maxHeight) {
+                    apiContainer.style.maxHeight = null;
+                }
+                // show accordion
+                else {
+                    apiContainer.style.maxHeight = apiContainer.scrollHeight + "px";
+                }
+            }
+
+            // add elements to page
+            document.getElementById("help").appendChild(button);
             document.getElementById("help").appendChild(apiContainer);
         });
     });

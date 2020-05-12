@@ -163,8 +163,8 @@ a.disabled:hover { color: white; cursor: default; }
     to { top: 0; opacity: 1 }
 }
 
-#lessons p {  line-height: 1.5;  }
-#lessons pre, #help pre {  border: 1px solid rgba(0,0,0,.125);  border-radius: .25rem;  padding: 1rem; }
+#lessons p, #tutorials p {  line-height: 1.5;  }
+#lessons pre, #help pre, #tutorials pre {  border: 1px solid rgba(0,0,0,.125);  border-radius: .25rem;  padding: 1rem; }
 .lesson.active { display: block !important; }
 
 #examples p:first-child { margin-top: 0; }

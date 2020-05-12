@@ -144,7 +144,8 @@ window.onload = () => {
     // render modal text from .json data files
     renderLessons();
     renderHelp();
-    renderExamples();
+    // renderExamples();
+    renderTutorials();
 }
 
 /**
@@ -216,6 +217,9 @@ function shareCode() {
     });
 }
 
+/**
+ * Generate a standalone HTML page and download it for offline use.
+ */
 function exportPage() {
     // need reference to editor so we can get the user's code
     let editor = document.querySelector('.CodeMirror').CodeMirror;
@@ -270,6 +274,31 @@ function renderExamples() {
     });
 }
 
+/**
+ * Convert tutorials
+ */
+function renderTutorials() {
+    fetch("data/tutorials.json")
+    .then(response => response.json())
+    .then(data => {
+        data.tutorials.forEach(tutorial => {
+            // create a div for each lesson
+            const tutorialContainer = document.createElement("div");
+            tutorialContainer.id = tutorial.name.split(" ").join("_").toLowerCase();
+            tutorialContainer.className = "tutorial";
+
+            // add the lesson to the lessons div
+            document.getElementById("tutorials").appendChild(tutorialContainer);
+
+            // render the blocks for that lesson
+            renderBlocks(tutorial.blocks, tutorialContainer);
+        });
+    });
+}
+
+/**
+ * Convert lessons.json into HTML for the lessons section.
+ */
 function renderLessons() {
     fetch("data/lessons.json")
     .then(response => response.json())
@@ -290,6 +319,9 @@ function renderLessons() {
     });
 }
 
+/**
+ * Convert docs.json into HTML for the help/API Reference section.
+ */
 function renderHelp() {
     const getObjectForCall = (api, isStatic) => {
         if (isStatic)
@@ -409,6 +441,9 @@ function renderHelp() {
     });
 }
 
+/**
+ * Get rid of event listeners that would otherwise persist across code execution.
+ */
 function clearEventListeners() {
     document.onclick = () => {};
     document.onkeydown = () => {};
@@ -417,6 +452,10 @@ function clearEventListeners() {
     document.onmouseover = () => {};
 }
 
+/**
+ * Open the modal to a certain page of content.
+ * @param {String} content 
+ */
 function openModal(content) {
     const modal = document.getElementById("myModal");
 
@@ -436,10 +475,10 @@ function openModal(content) {
 
         document.getElementById("lessons").style.display = "";
     }
-    else if (content == "examples") {
-        title = "Example Scripts";
+    else if (content == "tutorials") {
+        title = "Mosaic Tutorials";
 
-        document.getElementById("examples").style.display = "";
+        document.getElementById("tutorials").style.display = "";
     }
     else if (content == "help") {
         title = "Coding Help"
@@ -455,6 +494,9 @@ function openModal(content) {
     document.getElementById("modalTitle").innerText = title;
 }
 
+/**
+ * Close the modal element by hiding it.
+ */
 function closeModal() { 
     const modal = document.getElementById("myModal");
     modal.style.display = "none";

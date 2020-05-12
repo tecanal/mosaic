@@ -1,0 +1,37 @@
+{
+    "tutorials": [
+        {
+            "name": "Detecting Keyboard User Input",
+            "blocks": [
+                {
+                    "type": "h1",
+                    "content": "Detecting Keyboard User Input"
+                },
+                {
+                    "type": "p",
+                    "content": "If we wanted to make a game, one of the first things that we would want to do is have a way for the user to move the player around the screen. This is called <i>capturing user input</i>."
+                },
+                {
+                    "type": "p",
+                    "content": "There is a way built-in to the browser JavaScript called onkeypress. This is a function of the document object, which represents the current page."
+                },
+                {
+                    "type": "code",
+                    "content": "document.onkeypress = function(event) {\n\tconsole.log(event.code);\n}"
+                },
+                {
+                    "type": "p",
+                    "content": "The above code will print the key code that triggered the keypress event. The function we have created is called a handler function, which means we get to decide how the keypress event will be handled, or dealt with."
+                },
+                {
+                    "type": "code",
+                    "content": "document.onkeypress = function(event) {\n\t// move player up on W\n\tif (event.code == \"KeyW\") {\n\t\t// Change player Y by a positive value\n\t}\n\t// move player down on S\n\telse if (event.code == \"KeyS\"){\n\t\t// Change player Y by a negative value\n\t}\n\t// move player left on A\n\telse if (event.code == \"KeyA\"){\n\t\t// Change player X by a negative value\n\t}\n\t// move player right on D\n\telse if (event.code == \"KeyD\"){\n\t\t// Change player X by a positive value\n\t}\n}"
+                },
+                {
+                    "type": "p",
+                    "content": "Inside of the if and else-if's, you would put in code that would be specific to how you represent the player's position. Once you update a position, don't forget to re-draw the player. This usually means clearing the Mosaic, then coloring the tile as the player with the newly changed position."
+                }
+            ]
+        }
+    ]
+}

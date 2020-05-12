@@ -182,6 +182,34 @@ window.onclick = e => {
 }
 
 /**
+ * Display the editor on the mobile view.
+ */
+function editMobile() {
+    // turn off auto-run
+    autoRun = false;
+
+    // turn on button glow
+    document.getElementById("execute").classList.toggle("button-glow");
+
+    // display the code editor
+    document.getElementsByClassName("panel-left")[0].style.display = "";
+}
+
+/**
+ * Run the code on mobile mode.
+ */
+function runMobile() {
+    // hide code editor
+    document.getElementsByClassName("panel-left")[0].style.display = "none";
+
+    // turn off button flow
+    document.getElementById("execute").classList.toggle("button-glow");
+
+    // run the user code
+    runCode();
+}
+
+/**
  * Create a URL that can be used to share code.
  */
 function shareCode() {

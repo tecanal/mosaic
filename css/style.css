@@ -44,6 +44,27 @@ a.disabled:hover { color: white; cursor: default; }
     font-size: 1rem; 
 }
 
+#bottomShelf { display: none; }
+
+/* Mobile displays */
+@media only screen and (max-width: 768px) {
+    .nav { display: none; }
+
+    .splitter { display: none; }
+
+    .panel-container { height: 93% !important; }
+    #editor, #preview { width: 100vw; }
+    
+    #console  { width: 95% !important; }
+
+    #edit, #execute { width: 50vw; height: 100%; font-size: 1em; }
+    #edit { background-color: #3954AE; color: white; }
+    #execute { background-color: #4CAF50; color: white; float: right; }
+
+    #bottomShelf { display: block; height: 7%; }
+}
+
+/* Large screens only */
 @media only screen and (min-height: 1000px) {
     .nav {  overflow: hidden; background-color: #3954AE; height: 5vh; }
 
@@ -59,9 +80,7 @@ a.disabled:hover { color: white; cursor: default; }
         text-decoration: none; 
     }
 
-    #runCode, #stopRunning {
-        padding-top: 2vh;
-    }
+    #runCode, #stopRunning { padding-top: 2vh; }
 }
 
 .panel-container { display: flex; flex-direction: row; overflow: hidden; height: 92vh; padding: 0; margin: 0; }
@@ -81,13 +100,6 @@ a.disabled:hover { color: white; cursor: default; }
     min-height: 200px;
     cursor: col-resize;
 }
-
-/* For high resolution desktops */
-/* @media (min-width: 1281px) {
-    .nav { height: 4vh; }
-    .nav a, #runCode, #stopRunning { padding: 14px 16px; }
-    .panel-container { height: 96vh; }
-} */
 
 /* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_accordion_symbol */
 .accordion {

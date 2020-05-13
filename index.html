@@ -87,8 +87,18 @@
                     <div class="modalContent" id="help" style="display: none;"></div>
 
                     <div class="modalContent" id="about" style="display: none;">
-                        <button onclick="exportPage()">Export Code to HTML Page</button>
-                        <button onclick="shareCode()">Share Code with URL</button>
+                        <p>
+                            <input type="checkbox" id="includeConsole" name="includeConsole" checked>
+                            <label for="includeConsole">Include Console in Exported Page</label>
+                        </p>
+                       
+                        <p>
+                            <button onclick="exportPage()">Export Code to HTML Page</button>
+                        </p>
+                        
+                        <p>
+                            <button onclick="shareCode()">Share Code with URL</button>
+                        </p>
 
                         <p>
                             <input type="checkbox" id="enable" name="enable" onclick="Jeroo.prototype.enableIslandEditingMode(this.checked)">

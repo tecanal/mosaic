@@ -21,8 +21,14 @@ a.disabled:hover { color: white; cursor: default; }
     text-decoration: none; 
 }
 
+#tutorials pre, #lessons pre, #tutorials pre, #help pre  { position: relative; }
+.copyToEditor { position: absolute; top: 5px; right: 5px; content: "Copy to Editor"; }
+.copyToEditor:hover { text-decoration: underline; }
+
 .nav a.active { background-color: #4CAF50; color: white; }
 .nav a:hover { background-color: #ddd; color: black; }
+
+.panel-right { height: 100%; }
 
 #runCode { 
     background-color: #28A745; 
@@ -79,6 +85,8 @@ a.disabled:hover { color: white; cursor: default; }
         padding-bottom: 2vh;
         text-decoration: none; 
     }
+
+    .panel-container { height: 95vh !important; }
 
     #runCode, #stopRunning { padding-top: 2vh; }
 }

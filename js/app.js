@@ -266,12 +266,25 @@ function exportPage() {
     fetch("js/api.js")
     .then(response => response.text())
     .then(scriptText => {
-        // build html of page
-        const style = "html {  font-family: sans-serif; } table { border-collapse: collapse; margin: auto; } table, th, td { border: 1px solid black; } td { padding: 20px; } #console { width: 50%; margin: auto; box-sizing: border-box; padding: 10px; margin-top: 10px; background: white; border: 1px solid gray; height: 30%; overflow-y: scroll; }";
+        let html;
 
-        const scripts = "<script>" + scriptText + '(function() { const oldLog = console.log; const consoleEl = document.getElementById("console"); console.log = message => {consoleEl.innerHTML += message + "<br>"; consoleEl.scrollTop = consoleEl.scrollHeight; oldLog.apply(console, arguments);} })();' + "</script>" + "<script>" + editor.getValue() + "</script>";
+        // if the exported page needs console
+        if (document.getElementById("includeConsole").checked) {
+            // build html of page
+            const style = "html {  font-family: sans-serif; } table { border-collapse: collapse; margin: auto; } table, th, td { border: 1px solid black; } td { padding: 20px; } #console { width: 50%; margin: auto; box-sizing: border-box; padding: 10px; margin-top: 10px; background: white; border: 1px solid gray; height: 30%; overflow-y: scroll; }";
 
-        let html = "<html><head><title>Mosaic Export</title><style>" + style +'</style></head><body><table id="mosaic"></table><div id="console"></div>' + scripts + "</body></html>";
+            const scripts = "<script>" + scriptText + '(function() { const oldLog = console.log; const consoleEl = document.getElementById("console"); console.log = message => {consoleEl.innerHTML += message + "<br>"; consoleEl.scrollTop = consoleEl.scrollHeight; oldLog.apply(console, arguments);} })();' + "</script>" + "<script>" + editor.getValue() + "</script>";
+
+            html = "<html><head><title>Mosaic Export</title><style>" + style +'</style></head><body><table id="mosaic"></table><div id="console"></div>' + scripts + "</body></html>";
+        }
+        else {
+            // build html of page
+            const style = "html {  font-family: sans-serif; } table { border-collapse: collapse; margin: auto; } table, th, td { border: 1px solid black; } td { padding: 20px; } #console { width: 50%; margin: auto; box-sizing: border-box; padding: 10px; margin-top: 10px; background: white; border: 1px solid gray; height: 30%; overflow-y: scroll; }";
+
+            const scripts = "<script>" + scriptText + "</script>" + "<script>" + editor.getValue() + "</script>";
+
+            html = "<html><head><title>Mosaic Export</title><style>" + style +'</style></head><body><table id="mosaic"></table>' + scripts + "</body></html>";
+        }
 
         // create html blob with html we created
         const blob = new Blob([html], { type: "text/html" });
@@ -652,6 +665,8 @@ function renderBlocks(blocks, parent) {
 
             // treat code as special block
             if (block.type == "code") {
+                let editor = document.querySelector('.CodeMirror').CodeMirror;
+
                 // create code block as pre to keep whitespace
                 el = document.createElement("pre");
 
@@ -660,6 +675,13 @@ function renderBlocks(blocks, parent) {
                         
                 // run CodeMirror syntax highlighting on the code
                 CodeMirror.runMode(block.content, { name: "javascript" }, el);
+
+                const copyButton = document.createElement("span");
+                copyButton.className = "copyToEditor";
+                copyButton.innerHTML = "Copy to Editor";
+                copyButton.onclick = () => editor.setValue(block.content);
+
+                el.appendChild(copyButton);
             }
             // for any other element
             else {

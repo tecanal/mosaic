@@ -14,6 +14,11 @@ window.onload = () => {
     if ("serviceWorker" in navigator && window.location.hostname != "localhost") 
         navigator.serviceWorker.register("js/sw.js");
 
+    // detect if on a mobile device
+    if (window.innerWidth <= 768) {
+        setTimeout(() =>  alert("Are you on a mobile device? Although Mosaic has a mobile version, for best performance and more content, please check this website on a computer."), 2000);
+    }
+
     // create splitter panel
     $(".panel-left").resizable({
         handleSelector: ".splitter",
@@ -31,7 +36,7 @@ window.onload = () => {
         indentUnit: 4,
         lineWrapping: true,
         styleActiveLine: { nonEmpty: true },
-        value: "const moz = new Mosaic(5, 5);\n\nmoz.setTileColor(0, 0, 'black');",
+        value: "const moz = new Mosaic(5, 5);\n\nmoz.setTileColor(0, 0, \"black\");",
         extraKeys: {
             "Ctrl-/": instance => commentSelection(),
             "Cmd-/": instance => commentSelection()

@@ -590,7 +590,7 @@ function runCode() {
     resetStates();
 
     // run the user's code for the first time
-    executeCode();
+    setTimeout(executeCode, 50);
 }
 
 /**
@@ -619,6 +619,77 @@ function stopRunning() {
 }
 
 /**
+ * https://github.com/chinchang/web-maker/blob/master/src/utils.js
+ * @param {*} code 
+ * @param {*} timeout 
+ */
+function addInfiniteLoopProtection(code, timeout=2000) {
+    let loopId = 1;
+    let patches = [];
+    let varPrefix = '_wmloopvar';
+    let varStr = 'var %d = Date.now();\n';
+    let checkStr = `\nif (Date.now() - %d > ${timeout}) { stopRunning(); throw new Error("Infinite loop detected. Please make changes and press Run Code when you are ready to try again."); break;}\n`;
+
+    esprima.parse(
+        code,
+        {
+            tolerant: true,
+            range: true
+        },
+        function(node) {
+            switch (node.type) {
+                case 'DoWhileStatement':
+                case 'ForStatement':
+                case 'ForInStatement':
+                case 'ForOfStatement':
+                case 'WhileStatement':
+                    let start = 1 + node.body.range[0];
+                    let end = node.body.range[1];
+                    let prolog = checkStr.replace('%d', varPrefix + loopId);
+                    let epilog = '';
+
+                    if (node.body.type !== 'BlockStatement') {
+                        // `while(1) doThat()` becomes `while(1) {doThat()}`
+                        prolog = '{' + prolog;
+                        epilog = '}';
+                        --start;
+                    }
+
+                    patches.push({
+                        pos: start,
+                        str: prolog
+                    });
+
+                    patches.push({
+                        pos: end,
+                        str: epilog
+                    });
+
+                    patches.push({
+                        pos: node.range[0],
+                        str: varStr.replace('%d', varPrefix + loopId)
+                    });
+
+                    ++loopId;
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    );
+
+    /* eslint-disable no-param-reassign */
+    patches
+        .sort((a, b) => b.pos - a.pos)
+        .forEach(patch => code = code.slice(0, patch.pos) + patch.str + code.slice(patch.pos));
+
+    /* eslint-disable no-param-reassign */
+    return code;
+}
+
+/**
  * Execute user's code.
  */
 function executeCode() {
@@ -629,7 +700,8 @@ function executeCode() {
     // Get code from editor
     let editor = document.querySelector('.CodeMirror').CodeMirror;
 
-    let code = "(async function() { " + editor.getValue() + "\n })().catch(e => console.error(e))";
+    // instrument code to prevent infinite loops
+    let code = "(async function() { " + addInfiniteLoopProtection(editor.getValue()) + "\n })().catch(e => console.error(e))";
     
     // add code as a script to page + execute
     let script = document.createElement('script');

@@ -18,5 +18,6 @@ Created by [Rees Draminski](https://github.com/reesdraminski).
 
 ## Dependencies
 * [LZMA-JS](https://github.com/LZMA-JS/LZMA-JS): This is used to use LZMA compression on code content for the Share Code link feature.
+* [Esprima](http://esprima.org/): This is used to parse the AST of user code to do code instrumentation in order to detect and protect against infinite loops.
 * jQuery: This is only for jQuery-resizable, hopefully I can find a vanilla implementation or write my own in the future.
 * [jQuery-resizable](https://github.com/RickStrahl/jquery-resizable): This is used to make the resizable split panel view in the application.

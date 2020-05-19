@@ -16,15 +16,33 @@
     </head>
 
     <body>
-        <div class="nav">
-            <a href="javascript:void(0)" onclick="openModal('lessons')">Learn JavaScript</a>
-            <a href="javascript:void(0)" onclick="openModal('tutorials')">Tutorials</a>
-            <a href="javascript:void(0)" onclick="openModal('help')">Reference</a>
-            <a href="javascript:void(0)" onclick="openModal('about')">About</a>
+        <nav role="navigation">
+            <ul>
+                <li>
+                    <a href="javascript:void(0)" onclick="openModal('lessons')">Learn JavaScript</a>
+                </li>
 
-            <button disabled id="stopRunning" onclick="stopRunning()" style="float: right">Stop Running</button>
-            <button id="runCode" class="button-glow" onclick="runCode()" style="float: right">Run Code</button>
-        </div>
+                <li>
+                    <a href="javascript:void(0)" onclick="openModal('tutorials')">Tutorials</a>
+                </li>
+
+                <li>
+                    <a href="javascript:void(0)" onclick="openModal('help')">Reference</a>
+                </li>
+
+                <li>
+                    <a href="javascript:void(0)" onclick="openModal('about')">About</a>
+                </li>
+
+                <li class="pull-right">
+                    <button id="runCode" class="button-glow" onclick="runCode()" style="float: right">Run Code</button>
+                </li>
+
+                <li>
+                    <button disabled id="stopRunning" onclick="stopRunning()">Stop Running</button>
+                </li>
+            </ul>
+        </nav>
 
         <div class="panel-container">
             <div class="panel-left">

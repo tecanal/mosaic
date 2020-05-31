@@ -14,11 +14,6 @@ window.onload = () => {
     if ("serviceWorker" in navigator && window.location.hostname != "localhost") 
         navigator.serviceWorker.register("js/sw.js");
 
-    // detect if on a mobile device
-    if (window.innerWidth <= 768) {
-        setTimeout(() =>  alert("Are you on a mobile device? Although Mosaic has a mobile version, for best performance and more content, please check this website on a computer."), 2000);
-    }
-
     // create splitter panel
     $(".panel-left").resizable({
         handleSelector: ".splitter",
@@ -168,12 +163,6 @@ function resetStates() {
 
     // clear event listeners
     clearEventListeners();
-
-    // clear Jeroo instances
-    Jeroo.prototype.instances = [];
-
-    // copy master map into islandMap working copy
-    Jeroo.prototype.islandMap = JSON.parse(JSON.stringify(Jeroo.prototype.masterMap));
 }
 
 // listen for escape key press
